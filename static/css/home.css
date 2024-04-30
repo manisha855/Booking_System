@@ -1,0 +1,98 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid black;
+    padding: 15px;
+    text-align: left;
+}
+.book-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+
+.card-body {
+    background-color: #c3e1ed; /* Light Sky Blue */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.test-option {
+    display: grid;
+    grid-template-columns: auto 1fr; /* One column for icon, one column for text */
+    gap: 15px; /* Gap between columns */
+    background-color: #d1d5d9;
+    border: 2px solid #d1d5d9; /* Steel Blue */
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.test-option:hover {
+    background-color: #92caea;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    background-color: #4682B4; /* Steel Blue */
+    color: #fff;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 50%;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+}
+
+.test-option h2 {
+    color: #424649; /* Steel Blue */
+    margin-top: 0;
+}
+
+.test-option p {
+    color: #545050;
+}
+
+
+/* css for home_city */
+.card-body1 {
+    background-color: #fff; /* Light Sky Blue */
+    padding: 20px;
+    border-radius: 10px;
+}
+.header {
+    color: rgb(86, 43, 203);
+    font-size: 20px;
+}
+.sub-header {
+    color: rgb(99, 99, 226);
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.content1 {
+    background-color: rgb(175, 207, 241);
+    padding: 20px;
+}
+.content p {
+    color: darkblue;
+    font-size: 18px;
+}
+.content select {
+    width: 200px;
+    height: 30px;
+}
+.content a {
+    color: blue;
+    text-decoration: none;
+}

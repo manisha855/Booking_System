@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #911a09;
+    }
+
+    /* Form container with blue background */
+    .form-container {
+        background-color: #201c6a;
+        padding: 20px;
+        border-radius: 10px;
+        color: #ffffff;  /* Changed text color to white */
+    }
+    .col-form-label {
+        color: #ffffff; 
+    }
+</style>
+
+<div class="col-md-6 offset-md-3 form-container">
+    <h1>SignUp</h1>
+    <hr>
+    <br/>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Your form has errors
+                {% for field in form %}
+                    {% if field.errors %}
+                        {{ field.errors }}
+                    {% endif %}
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
+        <div class="mb-3 row">
+            <label for="{{ form.username.id_for_label }}" class="col-sm-2 col-form-label"><i class="fas fa-user"></i> Username:</label>
+            <div class="col-sm-10">
+                {{ form.username }}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="{{ form.first_name.id_for_label }}" class="col-sm-2 col-form-label"><i class="fas fa-user"></i> First Name:</label>
+            <div class="col-sm-10">
+                {{ form.first_name }}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="{{ form.last_name.id_for_label }}" class="col-sm-2 col-form-label"><i class="fas fa-user"></i> Last Name:</label>
+            <div class="col-sm-10">
+                {{ form.last_name }}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="{{ form.role.id_for_label }}" class="col-sm-2 col-form-label"><i class="fas fa-user"></i> Role:</label>
+            <div class="col-sm-10">
+                {{ form.role }}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label"><i class="fas fa-envelope"></i> Email:</label>
+            <div class="col-sm-10">
+                {{ form.email }}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="{{ form.password1.id_for_label }}" class="col-sm-2 col-form-label"><i class="fas fa-lock"></i> Password:</label>
+            <div class="col-sm-10">
+                {{ form.password1 }}
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="{{ form.password2.id_for_label }}" class="col-sm-2 col-form-label"><i class="fas fa-lock"></i> Confirm Password:</label>
+            <div class="col-sm-10">
+                {{ form.password2 }}
+            </div>
+        </div>
+        <div class="col-sm-10 offset-sm-2">
+            <button type="submit" class="btn btn-secondary">Register</button>
+        </div>
+        <div class="mt-3">
+            <p>Not a partner yet? <a href="#">Register as a Partner</a></p>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+{%  load static %}
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+	<meta name="author" content="AdminKit">
+	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="shortcut icon" href="{% static 'img/icons/icon-48x48.png' %}" />
+
+	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+	<title>Dashboard</title>
+
+	<link href="{% static 'css/app.css' %}" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+	<div class="wrapper">
+		<nav id="sidebar" class="sidebar js-sidebar">
+			<div class="sidebar-content js-simplebar">
+				<a class="sidebar-brand" href="index.html">
+          <span class="align-middle">MyProfile</span>
+        </a>
+
+				<ul class="sidebar-nav">
+					<li class="sidebar-item active">
+						<a class="sidebar-link" href="/">
+              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+            </a>
+            <li class="sidebar-item dropdown">
+				<a class="sidebar-link dropdown-toggle" href="#" id="formsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="align-middle" data-feather="check-square"></i> 
+					<span class="align-middle">Forms</span>
+				</a>
+				<div class="dropdown-menu" aria-labelledby="formsDropdown">
+					<a class="dropdown-item" href="{% url 'booking_form' %}">Create</a>
+					<a class="dropdown-item" href="#">List</a>
+				</div>
+			</li>
+			<li class="sidebar-item dropdown">
+				<a class="sidebar-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="align-middle" data-feather="user"></i> 
+					<span class="align-middle">Profile</span>
+				</a>
+				<div class="dropdown-menu" aria-labelledby="profileDropdown">
+					<a class="dropdown-item" href="{% url 'profile_create' %}">Create</a>
+					<a class="dropdown-item" href="{% url 'profile_list'%}">List</a>
+				</div>
+			</li>
+			
+			<li class="sidebar-item dropdown">
+				<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="align-middle" data-feather="book"></i> 
+					<span class="align-middle">Blank</span>
+				</a>
+				<div class="dropdown-menu" aria-labelledby="blankDropdown">
+					<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
+					<a class="dropdown-item" href="#">List</a>
+				</div>
+			</li>
+			
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="{% url 'logout' %}">
+							<i class="align-middle me-2" data-feather="log-out"></i> <span class="align-middle">Log out</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="main">
+			<nav class="navbar navbar-expand navbar-light navbar-bg">
+				<a class="sidebar-toggle js-sidebar-toggle">
+					<i class="hamburger align-self-center"></i>
+				</a>
+			
+				<div class="navbar-collapse collapse">
+					<ul class="navbar-nav navbar-align">
+						<li class="nav-item dropdown">
+							<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
+								<div class="position-relative">
+									<i class="align-middle" data-feather="bell"></i>
+									<span class="indicator">4</span>
+								</div>
+							</a>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
+								<i class="align-middle" data-feather="settings"></i>
+							</a>
+			
+							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+								<span class="text-dark">{{ request.user.first_name }}</span>
+							</a>	
+							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+								<li><a class="dropdown-item" href="{% url 'logout' %}"><i class="align-middle me-1" data-feather="log-out"></i> Log out</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			
+
+			<main class="content">
+				<div class="container-fluid p-0">
+					<h1 class="h3 mb-3">Blank Page</h1>
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-header">
+									<h5 class="card-title mb-0">Empty card</h5>
+								</div>
+								<div class="card-body">
+									<form method="POST" enctype="multipart/form-data">
+										{% csrf_token %}
+										{{ form.as_p }}
+										<button type="submit">Submit</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+			
+
+            <footer class="footer">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-6 text-start">
+							<p class="mb-0">
+								<a class="text-muted" href="#" target="_blank"><strong style="color: blue;">British American EDUCARE</strong></a> - 
+								<a class="text-muted" href="#" target="_blank"><strong style="color: red;">Empowering Education</strong></a> &copy; 2024
+							</p>
+						</div>
+						<div class="col-md-6 text-end">
+							<ul class="list-inline">
+								<li class="list-inline-item">
+									<a class="text-muted" href="#">Support</a>
+								</li>
+								<li class="list-inline-item">
+									<a class="text-muted" href="#">Help Center</a>
+								</li>
+								<li class="list-inline-item">
+									<a class="text-muted" href="#">Privacy</a>
+								</li>
+								<li class="list-inline-item">
+									<a class="text-muted" href="#">Terms</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+	</div>
+
+	<script src="{% static 'js/app.js' %}"></script>
+
+</body>
+
+</html>

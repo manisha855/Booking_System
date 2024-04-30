@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+	body {
+		background-color: #911a09; 
+	 }
+    /* Background color for form content */
+    .form-content {
+        background-color: #201c6a;
+        padding: 20px;
+        border-radius: 10px;
+        color: #ffffff;
+    }
+</style>
+
+<div class="col-md-6 offset-md-3">
+    <div class="form-content">
+        <h1>Login</h1>
+        <br/>
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    Your Form Has Errors
+                    {% for field in form %}
+                        {% if field.errors %}
+                            {{ field.errors }}
+                        {% endif %}
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+
+            {{ form.as_p }}
+
+            <br/>
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-secondary">Login</button>
+            </div>
+            <div class="mt-3">
+                <p>Don't have an account? <a href="{% url 'register' %}">SignUp Now</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+/* booking_form.css */
+
+/* Style for form container */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Style for form labels */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333; /* Label text color */
+}
+
+/* Style for form input fields */
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px; /* Input text font size */
+    color: #666; /* Input text color */
+}
+
+/* Style for form input placeholder */
+input::placeholder {
+    color: #999; /* Placeholder text color */
+}
+
+/* Style for file input */
+input[type="file"] {
+    display: block;
+    margin-top: 5px;
+    font-size: 16px; /* File input font size */
+    color: #666; /* File input text color */
+}
+
+/* Style for select dropdown */
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px; /* Select dropdown font size */
+    color: #666; /* Select dropdown text color */
+    background-color: #fff; /* Select dropdown background color */
+}
+
+/* Style for submit button */
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px; /* Submit button font size */
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+/* Style for form container */
+.form-container {
+    display: flex;
+}
+
+/* Style for columns */
+.column {
+    flex: 1;
+    padding: 0 10px;
+}
+
+/* Apply previous styles for form groups, labels, inputs, etc. */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Add other styles as needed */
+/* Style for book button */
+.book-button {
+    background-color: #4CAF50; /* Button background color */
+    color: white; /* Button text color */
+    padding: 10px 20px; /* Button padding */
+    border: none; /* Remove button border */
+    border-radius: 4px; /* Button border radius */
+    cursor: pointer; /* Cursor style */
+    text-decoration: none; /* Remove default link underline */
+    display: inline-block; /* Make button display inline */
+    font-size: 16px; /* Button text font size */
+    margin-top: 20px; /* Add top margin */
+}
+
+.book-button:hover {
+    background-color: #45a049; /* Change button background color on hover */
+}
