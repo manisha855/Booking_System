@@ -3,8 +3,9 @@ from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth import login as auth_login  
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import SignUpForm, UserLoginForm, BookingForm, ProfileForm, BlankForm, ExamForm
-from .models import CustomUser, Student, Booking, Profile, ExamType, TestSchedules, Blank
+from .forms import SignUpForm, UserLoginForm, BookingForm, ProfileForm, BlankForm, ExamForm, NameForm
+from .models import CustomUser, Student, Booking, Profile, ExamType, TestSchedules, Blank,SubmittedName
+
 
 # Create your views here.
 #IELTS test fees in Nepal
@@ -30,47 +31,42 @@ def home_book_test(request):
     test_listen = TestSchedules.objects.filter(test_type='Listening').first()
     return render(request, 'home_book_test.html', {'test_LRW': test_LRW, 'test_listen': test_listen})
 
-#home requirement like login-register
+#Root Redirect
+def root_redirect(request):
+    return redirect('register')
+
+# Home 
+@login_required
 def home(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    students = Student.objects.all()
+    paper_exam = ExamType.objects.filter(test_type='paper').first()
+    computer_exam = ExamType.objects.filter(test_type='computer').first()
+    visa_exam = ExamType.objects.filter(test_type='visa').first()
+    lifeskill_exam = ExamType.objects.filter(test_type='lifeskill').first()
 
-        # Authenticate user
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, "You have been logged in!")
-            return redirect('home')
-        else:
-            messages.error(request, "There was an error logging in. Please try again.")
-            return redirect('home')
-    else:
-        if request.user.is_authenticated:
-            students = Student.objects.all()
-            paper_exam = ExamType.objects.filter(test_type='paper').first()
-            computer_exam = ExamType.objects.filter(test_type='computer').first()
-            visa_exam = ExamType.objects.filter(test_type='visa').first()
-            lifeskill_exam = ExamType.objects.filter(test_type='lifeskill').first()
-
-            return render(request, 'home.html', {'students': students, 'paper_exam': paper_exam, 'computer_exam': computer_exam, 'visa_exam': visa_exam, 'lifeskill_exam': lifeskill_exam})
-        else:
-            return redirect('login')
+    return render(request, 'home.html', {'students': students, 'paper_exam': paper_exam, 'computer_exam': computer_exam, 'visa_exam': visa_exam, 'lifeskill_exam': lifeskill_exam})
 
 def login_user(request):
-    next_url = request.GET.get('next')
-    form = UserLoginForm(request.POST or None)
-    if form.is_valid():
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            if next_url:
-                return redirect(next_url)
-            return redirect('/')
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                # Redirect to the dashboard after successful login
+                return redirect('home')
+            else:
+                # User authentication failed
+                messages.error(request, "Invalid username or password.")
         else:
-            messages.error(request, "Invalid username or password.")
+            # Form validation failed
+            messages.error(request, "Form validation failed. Please check the form data.")
+    else:
+        form = UserLoginForm()
+    
+    # If the request method is GET or form is invalid, render the login form
     return render(request, "login.html", {'form': form})
 
 def logout_user(request):
@@ -89,13 +85,14 @@ def register_user(request):
                 user = form.save(commit=False)
                 user.role = form.cleaned_data['role']
                 user.save()
-                auth_login(request, user)  # Use auth_login to avoid naming conflicts
+                login(request, user)  # Automatically log in the user after registration
                 messages.success(request, "You have successfully registered!")
-                return redirect('home')
+                return redirect('home')  # Redirect to the home page after registration
         else:
             messages.error(request, "Form validation failed. Please check the form data.")
     else:
         form = SignUpForm()
+    
     return render(request, 'register.html', {'form': form})
 
 def student_record(request, pk):
@@ -121,24 +118,29 @@ def profile(request):
      return render(request, 'profile.html')
 
 #form crud
+@login_required
 def booking_form(request):
     if request.method == 'POST':
         form = BookingForm(request.POST, request.FILES)
         if form.is_valid():
             booking = form.save(commit=False)
-            booking.created_by = request.user  # Assign the current user
+            booking.creator = request.user  # Assuming you are using Django's built-in authentication system
             booking.save()
-            messages.success(request, 'Booking Form is submitted successfully.')
-            return redirect('booking_list')
-        else:
-            messages.error(request, 'Form submission failed. Please check the errors.')
+            return redirect('booking_list')  # Redirect to a success page or another view
     else:
-        form = BookingForm()
-        
+        form = BookingForm()     
     return render(request, 'booking_form.html', {'form': form})
 
+@login_required
 def booking_list(request):
-    bookings = Booking.objects.filter(user=request.user)
+    if request.user.is_authenticated:  # Check if user is authenticated
+        if request.user.role == 'admin':  # Check if user is an admin
+            bookings = Booking.objects.all()  # Show all bookings for admin
+        else:
+            bookings = Booking.objects.filter(creator=request.user)  # Show bookings created by the user
+    else:
+        bookings = []  # If user is not authenticated, return empty queryset
+    
     return render(request, 'booking_list.html', {'bookings': bookings})
 
 def booking_detail(request, pk):
@@ -226,3 +228,20 @@ def blank(request):
         form = BlankForm()
     return render(request, 'blank.html', {'form': form})
 
+@login_required
+def submit_name(request):
+    if request.method == 'POST':
+        form = NameForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            creator = request.user  # Assuming you are using Django's built-in authentication system
+            SubmittedName.objects.create(name=name, creator=creator)
+            return redirect('name_list')
+    else:
+        form = NameForm()
+    return render(request, 'submit_name.html', {'form': form})
+
+@login_required
+def name_list(request):
+    names = SubmittedName.objects.filter(creator=request.user)
+    return render(request, 'name_list.html', {'names': names})

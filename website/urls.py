@@ -11,7 +11,8 @@ urlpatterns = [
     
 
     #User Role
-    path('', views.home, name='home'),
+    path('', views.root_redirect, name='root'), 
+    path('home/', views.home, name='home'), 
     path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
     path('register/', views.register_user, name='register'), 
@@ -34,4 +35,8 @@ urlpatterns = [
 
     path('blank/', views.blank, name='blank'),
     # path('patner/', views.partner_index, name='patner'),
+
+    path('submit_name/', views.submit_name, name='submit_name'),
+    path('names/', views.name_list, name='name_list'),
+    
 ]

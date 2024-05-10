@@ -8,20 +8,18 @@ class UserLoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
 
-    def clean(self, *args, **kwargs):
-        username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
 
         if username and password:
             user = authenticate(username=username, password=password)
 
-            if not user:
-                raise forms.ValidationError('User Does Not Exist')
+            if user is None:
+                raise forms.ValidationError('User does not exist or incorrect password')
 
-            if not user.check_password(password):
-                raise forms.ValidationError('Incorrect Password')
-
-        return super(UserLoginForm, self).clean(*args, **kwargs)
+        return cleaned_data
     
 #register for individuals
 class SignUpForm(UserCreationForm):
@@ -31,7 +29,7 @@ class SignUpForm(UserCreationForm):
     role = forms.ChoiceField(label="Role", choices=[('individual', 'Individual'), ('partner', 'Partner')])
 
     class Meta:
-        model = CustomUser  # Use your CustomUser model
+        model = CustomUser  
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'role')
 
     def __init__(self, *args, **kwargs):
@@ -63,7 +61,6 @@ class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = ['name', 'passport', 'test_city', 'signature', 'signature_date', 'email', 'phone', 'test_model', 'delivery_method']
-
     
 
 # class BookingForm(forms.ModelForm):
@@ -99,3 +96,6 @@ class BlankForm(forms.ModelForm):
     class Meta:
         model = Blank
         fields = ['name'] 
+
+class NameForm(forms.Form):
+    name = forms.CharField(max_length=100)

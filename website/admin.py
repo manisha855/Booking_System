@@ -57,3 +57,4 @@ admin.site.register(Profile,ProfileAdmin)
 
 # Register TestSchedule using the custom admin class
 admin.site.register(TestSchedules, TestScheduleAdmin)
+

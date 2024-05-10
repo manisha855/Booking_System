@@ -1,10 +1,11 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model
 from django.db import models
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('individual', 'Individual'),
-        ('partner', 'Partner'),
+        ('partner', 'Partner')
     )
     
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
@@ -16,38 +17,23 @@ class CustomUser(AbstractUser):
 # Add related_name to resolve the clash for groups and user_permissions
 CustomUser._meta.get_field('groups').remote_field.related_name = 'custom_user_groups'
 CustomUser._meta.get_field('user_permissions').remote_field.related_name = 'custom_user_permissions'
-      
-#model for student
-class Student(models.Model):
-    create_at = models.DateTimeField(auto_now_add=True)
-    username = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.CharField(max_length=50)
-    phone = models.CharField(max_length=15)
-    address = models.CharField(max_length=100)
-    partner = models.BooleanField(default=False) 
 
-    def __str__(self):
-        return f"Student->{self.first_name}"
-
-
-#model for booking(form details)  
 class Booking(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Reference to the user who made the booking
     name = models.CharField(max_length=100)
     passport = models.CharField(max_length=100)
-    test_city = models.CharField(max_length=100, choices=[('ktm', 'Kathmandu'), ('pokhara', 'Pokhara')])
+    test_city = models.CharField(max_length=100, choices=[('ktm', 'Kathmandu')])
     signature = models.FileField(upload_to='signatures/')
     signature_date = models.DateField()
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     test_model = models.CharField(max_length=20, choices=[('academic', 'Academic'), ('general', 'General Training')])
     delivery_method = models.CharField(max_length=20, choices=[('computer', 'Computer-delivered'), ('paper', 'Paper-based')])
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Booking -> {self.name}"
-
+    
 class Profile(models.Model):
     full_name = models.CharField(max_length=100)
     profile_image = models.ImageField(upload_to='profile_images/')
@@ -59,9 +45,11 @@ class Profile(models.Model):
     course = models.CharField(max_length=100)
     batch = models.CharField(max_length=20)
     major = models.CharField(max_length=100)
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-def __str__(self):
-        return f"Profile ->{self.name}" 
+    def __str__(self):
+        return f"Profile -> {self.full_name}"
 
 #Exam Tyes set by admin
 class ExamType(models.Model):
@@ -122,9 +110,28 @@ class TestSchedules(models.Model):
 #     address = models.CharField(max_length=100)
 #     pdf_file = models.FileField(upload_to='pdfs/')
 
-   
+#model for student
+class Student(models.Model):
+    create_at = models.DateTimeField(auto_now_add=True)
+    username = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    phone = models.CharField(max_length=15)
+    address = models.CharField(max_length=100)
+    partner = models.BooleanField(default=False) 
+
+    def __str__(self):
+        return f"Student->{self.first_name}"
+
+
 class Blank(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+    
+class SubmittedName(models.Model):
+    name = models.CharField(max_length=100)
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)    
