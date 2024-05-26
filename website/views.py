@@ -17,24 +17,24 @@ def examtype_list(request):
 @login_required
 def home_exam_type(request):
     # Your view logic here
-    return render(request, 'home_exam_type.html')
+    return render(request, 'home/home_exam_type.html')
 
 @login_required
 def home_exam_city(request):
     # Your view logic here
     city_names = ExamType.objects.values_list('city_name', flat=True).distinct()
-    return render(request, 'home_city.html', {'city_names': city_names})
+    return render(request, 'home/home_city.html', {'city_names': city_names})
 
 @login_required
 def home_find_test(request):
     selected_city = request.GET.get('city', 'Nepal')  # Get the selected city from the query parameter
-    return render(request, 'home_find_test.html', {'selected_city': selected_city})
+    return render(request, 'home/home_find_test.html', {'selected_city': selected_city})
 
 @login_required
 def home_book_test(request):
     test_LRW = TestSchedules.objects.filter(test_type='LRW').first()
     test_listen = TestSchedules.objects.filter(test_type='Listening').first()
-    return render(request, 'home_book_test.html', {'test_LRW': test_LRW, 'test_listen': test_listen})
+    return render(request, 'home/home_book_test.html', {'test_LRW': test_LRW, 'test_listen': test_listen})
 
 #Root Redirect
 @login_required
@@ -113,7 +113,7 @@ def booking_form(request):
             return redirect('booking_list')  
     else:
         form = BookingForm()     
-    return render(request, 'booking_form.html', {'form': form})
+    return render(request, 'booking/booking_form.html', {'form': form})
 
 @login_required
 def booking_list(request):
@@ -125,12 +125,12 @@ def booking_list(request):
     else:
         bookings = []  # If user is not authenticated, return empty queryset
     
-    return render(request, 'booking_list.html', {'bookings': bookings})
+    return render(request, 'booking/booking_list.html', {'bookings': bookings})
 
 @login_required
 def booking_detail(request, pk):
     booking = get_object_or_404(Booking, pk=pk)
-    return render(request, 'booking_details.html', {'booking': booking})
+    return render(request, 'booking/booking_details.html', {'booking': booking})
 
 @login_required
 def edit_booking(request, booking_id):
@@ -139,10 +139,10 @@ def edit_booking(request, booking_id):
         form = BookingForm(request.POST, instance=booking)
         if form.is_valid():
             form.save()
-            return redirect('booking_detail', pk=booking.pk)
+            return redirect('booking/booking_detail', pk=booking.pk)
     else:
         form = BookingForm(instance=booking)
-    return render(request, 'booking_edit.html', {'form': form})
+    return render(request, 'booking/booking_edit.html', {'form': form})
 
 @login_required
 def delete_booking(request, booking_id):
@@ -152,27 +152,13 @@ def delete_booking(request, booking_id):
         return redirect('booking_list')  # Redirect to the booking list page after deletion
     else:
         # Handle the case where the request method is not POST
-        return redirect('booking_list') 
+        return redirect('booking/booking_list') 
 
 @login_required    
 def booking_payment(request):
-    return render(request, 'booking_payment.html')    
+    return render(request, 'booking/booking_payment.html')    
 
-#For Profile CRUD
-# @login_required
-# def profile_create(request):
-#     if request.method == 'POST':
-#         form = ProfileForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             profile = form.save(commit=False)  
-#             profile.creator = request.user  
-#             profile.save()  
-#             return redirect('profile_list')  
-#     else:
-#         form = ProfileForm()  
-    
-#     return render(request, 'profile_create.html', {'form': form})
-
+#Profile CRUD
 @login_required
 def profile_create(request):
     if request.method == 'POST':
@@ -187,8 +173,7 @@ def profile_create(request):
             messages.error(request, 'Failed to create profile. Please check the errors.')
     else:
         form = ProfileForm()   
-    return render(request, 'profile_create.html', {'form': form})
-
+    return render(request, 'profile/profile_create.html', {'form': form})
 
 @login_required
 def profile_list(request):
@@ -202,13 +187,12 @@ def profile_list(request):
     else:
         profiles = []
     
-    return render(request, 'profile_list.html', {'profiles': profiles})
-
+    return render(request, 'profile/profile_list.html', {'profiles': profiles})
 
 @login_required
 def profile_detail(request, pk):
     profile = get_object_or_404(Profile, pk=pk)
-    return render(request, 'profile_details.html', {'profile': profile})
+    return render(request, 'profile/profile_details.html', {'profile': profile})
 
 @login_required
 def profile_edit(request, pk):
@@ -221,7 +205,7 @@ def profile_edit(request, pk):
             return redirect('profile_list')
     else:
         form = ProfileForm(instance=profile)
-    return render(request, 'profile_edit.html', {'form': form, 'profile': profile})
+    return render(request, 'profile/profile_edit.html', {'form': form, 'profile': profile})
 
 @login_required
 def delete_profile(request, pk):
@@ -231,7 +215,7 @@ def delete_profile(request, pk):
         messages.success(request, 'Profile deleted successfully.')
         return redirect('profile_list')
         
-    return render(request, 'profile_delete.html', {'profile': profile})
+    return render(request, 'profile/profile_delete.html', {'profile': profile})
 
 #Add exam type by admin
 @login_required
@@ -243,17 +227,17 @@ def create_exam_type(request):
             return redirect('exam_type_list')  # Redirect to a URL where you list all exam types
     else:
         form = ExamForm()
-    return render(request, 'exam_type.html', {'form': form})
+    return render(request, 'exam/exam_type.html', {'form': form})
 
 @login_required
 def exam_type_list(request):
     exam_types = ExamType.objects.all()
-    return render(request, 'exam_list.html', {'exam_types': exam_types})
+    return render(request, 'exam/exam_list.html', {'exam_types': exam_types})
 
 @login_required
 def exam_detail(request, pk):
     exam_type = get_object_or_404(ExamType, pk=pk)
-    return render(request, 'exam_details.html', {'exam_type': exam_type})
+    return render(request, 'exam/exam_details.html', {'exam_type': exam_type})
 
 @login_required
 def examtype_edit(request, pk):
@@ -265,13 +249,13 @@ def examtype_edit(request, pk):
             return redirect('examtype_list')
     else:
         form = ExamForm(instance=examtype)
-    return render(request, 'examtype_form.html', {'form': form})
+    return render(request, 'exam/examtype_form.html', {'form': form})
 
 @login_required
 def exam_delete(request, pk):
     exam_type = get_object_or_404(ExamType, pk=pk)
     exam_type.delete()
-    return redirect('examtype_list')
+    return redirect('exam/examtype_list')
 
 #Test schedule CRUD
 @login_required
@@ -292,6 +276,7 @@ def test_schedules_list(request):
     return render(request, 'test/test_list.html', {'test_schedules': test_schedules})
 
 # Test schedule detail view
+@login_required
 def test_schedules_detail(request, pk):
     test_schedule = get_object_or_404(TestSchedules, pk=pk)
     return render(request, 'test/test_details.html', {'object': test_schedule})

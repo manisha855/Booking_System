@@ -17,11 +17,7 @@
 	<title>Dashboard</title>
 
 	<link href="{% static 'css/app.css' %}" rel="stylesheet">
-    <link href="{% static 'css/home.css' %}" rel="stylesheet">
-    <link href="{% static 'js/home.js' %}" rel="stylesheet">
-
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="{% static 'button.css' %}">
 </head>
 
 <body>
@@ -34,7 +30,7 @@
 
 				<ul class="sidebar-nav">
 					<li class="sidebar-item active">
-						<a class="sidebar-link" href="/">
+						<a class="sidebar-link" href={% url 'home' %}>
               <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
             </a>
 			<li class="sidebar-item dropdown">
@@ -88,8 +84,8 @@
 								<a class="dropdown-item" href="#">List</a>
 							</div>
 						</li>
-						
 					{% endif %}
+					
 			
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'logout' %}">
@@ -116,6 +112,11 @@
 								</div>
 							</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://api.whatsapp.com/send?phone=+977-9806511974" target="_blank" style="color: #25d366;" title="+977-9806511974">
+								<i class="align-middle" data-feather="message-circle" style="color: #25d366;"></i> <span style="color: #25d366;">WhatsApp</span>
+							</a>
+						</li>	
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
 								<i class="align-middle" data-feather="settings"></i>
@@ -135,31 +136,24 @@
 			<main class="content">
 				<div class="container-fluid p-0">
 					<div class="mb-3">
-						<h1 class="h3 d-inline align-middle">List of Registered Candidates</h1>
+						<h1 class="h3 d-inline align-middle">IELTS Exam Registration</h1>
 					</div>
 					<div class="mt-3">
-						<a href="{% url 'home' %}" class="btn btn-success">Book</a>
+						<a href="{% url 'booking_list' %}" class="btn btn-primary">List</a>
 					</div>
 					<div class="row">
 						<div class="col-12">
 							<div class="card">
-								<div class="card-body1">
-                                    <a class="header" href="{% url 'home_exam_type' %}"><h2>IELTS Academic</h2></a>
-                                    <div class="sub-header">Find a test</div>
-                                    <hr>
-                                    <div class="content1">
-										<h2>Where would you like to take your test?</h2>
-										<p>Search in: Nepal
-											<select id="locationSelect" onchange="navigateToCity(this)">
-												<option value="" selected disabled>Select City</option>
-												{% for city_name in city_names %}
-												<option value="{% url 'home_find_test' %}?city={{ city_name }}">{{ city_name }}</option>
-												{% endfor %}
-											</select>
-											<a href="#" id="changeCountryLink">Change country / territory</a>
-										</p>
-									</div>
-									
+								<div class="card-header">
+									<h5 class="card-title mb-0"> Edit Exam Information</h5>
+								</div>
+
+								<div class="card-body">
+									<form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        {{ form.as_p }}
+                                        <button type="submit">Save Changes</button>
+                                    </form>
 								</div>
 							</div>
 						</div>
@@ -199,14 +193,7 @@
 	</div>
 
 	<script src="{% static 'js/app.js' %}"></script>
-	<script>
-		function navigateToCity(selectElement) {
-			var selectedCity = selectElement.value;
-			if (selectedCity) {
-				window.location.href = selectedCity;
-			}
-		}
-	</script>
+
 </body>
 
 </html>

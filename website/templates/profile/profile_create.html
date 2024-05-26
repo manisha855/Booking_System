@@ -31,7 +31,7 @@
 
 				<ul class="sidebar-nav">
 					<li class="sidebar-item active">
-						<a class="sidebar-link" href="/">
+						<a class="sidebar-link" href={% url 'home' %}>
               <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
             </a>
 			<li class="sidebar-item dropdown">
@@ -41,7 +41,7 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="formsDropdown">
 					<a class="dropdown-item" href="{% url 'booking_form' %}">Create</a>
-					<a class="dropdown-item" href="{% url 'booking_list' %}">List</a>
+					<a class="dropdown-item" href="#">List</a>
 				</div>
 			</li>
 			<li class="sidebar-item dropdown">
@@ -51,7 +51,7 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="profileDropdown">
 					<a class="dropdown-item" href="{% url 'profile_create' %}">Create</a>
-					<a class="dropdown-item" href="#">List</a>
+					<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
 				</div>
 			</li>
 			{% if user.is_superuser %}
@@ -82,7 +82,7 @@
 							</a>
 							<div class="dropdown-menu" aria-labelledby="blankDropdown">
 								<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
-								<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
+								<a class="dropdown-item" href="#">List</a>
 							</div>
 						</li>
 					{% endif %}
@@ -113,6 +113,11 @@
 								</div>
 							</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://api.whatsapp.com/send?phone=+977-9806511974" target="_blank" style="color: #25d366;" title="+977-9806511974">
+								<i class="align-middle" data-feather="message-circle" style="color: #25d366;"></i> <span style="color: #25d366;">WhatsApp</span>
+							</a>
+						</li>	
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
 								<i class="align-middle" data-feather="settings"></i>
@@ -132,10 +137,10 @@
 			<main class="content">
 				<div class="container-fluid p-0">
 					<div class="mb-3">
-						<h1 class="h3 d-inline align-middle">IELTS Exam Registration</h1>
+						<h1 class="h3 d-inline align-middle">Profile Creation</h1>
 					</div>
 					<div class="mt-3">
-						<a href="{% url 'booking_list' %}" class="btn btn-primary">List</a>
+						<a href="{% url 'profile_list' %}" class="btn btn-primary">List</a>
 					</div>
 					<div class="row">
 						<div class="col-12">
@@ -144,53 +149,60 @@
 									<h5 class="card-title mb-0">Candidate Information</h5>
 								</div>
 								<div class="card-body">
-									<form method="post" enctype="multipart/form-data" class="form-container">
+									<form method="POST" enctype="multipart/form-data">
 										{% csrf_token %}
-										<div class="column">
-											<!-- Left column content -->
-											<div class="form-group">
-												<label for="id_name">Passport Name:</label>
-												{{ form.name }}
+										<div class="form-columns">
+											<div class="column">
+												<!-- Left column content -->
+												<div class="form-group">
+													<label for="id_full_name">Full Name:</label>
+													{{ form.full_name }}
+												</div>
+												<div class="form-group">
+													<label for="id_profile_image">Profile Image:</label>
+													{{ form.profile_image }}
+												</div>
+												<div class="form-group">
+													<label for="id_email">Email:</label>
+													{{ form.email }}
+												</div>
+												<div class="form-group">
+													<label for="id_phone_number">Phone Number:</label>
+													{{ form.phone_number }}
+												</div>
+												<div class="form-group">
+													<label for="id_date_of_birth">Date of Birth:</label>
+													{{ form.date_of_birth }}
+												</div>
 											</div>
-											<div class="form-group">
-												<label for="id_passport">Passport No:</label>
-												{{ form.passport }}
+											<div class="column">
+												<!-- Right column content -->
+												<div class="form-group">
+													<label for="id_address" style="display: block; font-weight: bold; margin-bottom: 5px; color: #333;">Address:</label>
+													<textarea id="id_address" name="address" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; color: #666; resize: vertical; min-height: 100px;"></textarea>
+												</div>												
+												<div class="form-group">
+													<label for="id_student_id">Student ID:</label>
+													{{ form.student_id }}
+												</div>
+												<div class="form-group">
+													<label for="id_course">Course:</label>
+													{{ form.course }}
+												</div>
+												<div class="form-group">
+													<label for="id_batch">Batch:</label>
+													{{ form.batch }}
+												</div>
+												<div class="form-group">
+													<label for="id_major">Major:</label>
+													{{ form.major }}
+												</div>
 											</div>
-											<div class="form-group">
-												<label for="id_city_name">Select City:</label>
-												{{ form.test_city }}
-											</div>
-											<div class="form-group">
-												<label for="id_signature">Signature:</label>
-												{{ form.signature }}
-											</div>
-											<div class="form-group">
-												<label for="id_signature_date">Signature Date:</label>
-												{{ form.signature_date }}
-											</div>
-											<button type="submit">Submit</button>
-											<a href="{% url 'home_book_test' %}" class="btn btn-primary btn-sm">Book Your Exam Date</a>
 										</div>
-										<div class="column">
-											<!-- Right column content -->
-											<div class="form-group">
-												<label for="id_email">Email:</label>
-												{{ form.email }}
-											</div>
-											<div class="form-group">
-												<label for="id_phone">Phone:</label>
-												{{ form.phone }}
-											</div>
-											<div class="form-group">
-												<label for="id_test_model">Test Model:</label>
-												{{ form.test_model }}
-											</div>
-											<div class="form-group">
-												<label for="id_delivery_method">Delivery Method:</label>
-												{{ form.delivery_method }}
-											</div>
-										</div>
+										<button type="submit">Submit</button>
 									</form>
+									
+									
 								</div>
 							</div>
 						</div>
@@ -198,6 +210,7 @@
 				</div>
 			</main>
 			
+
 			<footer class="footer">
 				<div class="container-fluid">
 					<div class="row">

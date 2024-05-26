@@ -17,8 +17,11 @@
 	<title>Dashboard</title>
 
 	<link href="{% static 'css/app.css' %}" rel="stylesheet">
-	<link href="{% static 'css/form.css' %}" rel="stylesheet">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+
+    <link href="static/css/home.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'button.css' %}">
 </head>
 
 <body>
@@ -31,7 +34,7 @@
 
 				<ul class="sidebar-nav">
 					<li class="sidebar-item active">
-						<a class="sidebar-link" href="/">
+						<a class="sidebar-link" href={% url 'home' %}>
               <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
             </a>
 			<li class="sidebar-item dropdown">
@@ -51,7 +54,7 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="profileDropdown">
 					<a class="dropdown-item" href="{% url 'profile_create' %}">Create</a>
-					<a class="dropdown-item" href="#">List</a>
+					<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
 				</div>
 			</li>
 			{% if user.is_superuser %}
@@ -82,7 +85,7 @@
 							</a>
 							<div class="dropdown-menu" aria-labelledby="blankDropdown">
 								<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
-								<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
+								<a class="dropdown-item" href="#">List</a>
 							</div>
 						</li>
 					{% endif %}
@@ -113,6 +116,11 @@
 								</div>
 							</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://api.whatsapp.com/send?phone=+977-9806511974" target="_blank" style="color: #25d366;" title="+977-9806511974">
+								<i class="align-middle" data-feather="message-circle" style="color: #25d366;"></i> <span style="color: #25d366;">WhatsApp</span>
+							</a>
+						</li>	
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
 								<i class="align-middle" data-feather="settings"></i>
@@ -132,57 +140,35 @@
 			<main class="content">
 				<div class="container-fluid p-0">
 					<div class="mb-3">
-						<h1 class="h3 d-inline align-middle">List of Exam Type</h1>
+						<h1 class="h3 d-inline align-middle">IELTS TEST</h1>
 					</div>
 					<div class="mt-3">
-                        <a href="{% url 'create_exam_type' %}" class="btn btn-success">Create </a>
-                    </div>
+						<a href="{% url 'home' %}" class="btn btn-success">Book</a>
+					</div>
 					<div class="row">
 						<div class="col-12">
 							<div class="card">
-								<div class="card-body">
-									<table class="table table-striped">
-										<thead>
-											<tr>
-												<th>City Name</th>
-												<th>Location</th>
-												<th>Current Fee</th>
-												<th>Newest Fee</th>
-												<th>Test Type</th>
-												<th>Test Model</th>
-												<th>Action</th>
-												<!-- Add more columns as needed -->
-											</tr>
-										</thead>
-										<tbody>
-											{% for exam_type in exam_types %}
-												<tr>
-													<td>{{ exam_type.city_name }}</td>
-													<td>{{ exam_type.location }}</td>
-													<td>{{ exam_type.current_fee }}</td>
-													<td>{{ exam_type.newest_fee }}</td>
-													<td>{{ exam_type.get_test_type_display }}</td>
-													<td>{{ exam_type.get_test_model_display }}</td>
-													<td>
-														<div class="action-links">
-															<!-- View button -->
-															<a href="{% url 'exam_detail' pk=exam_type.pk %}" class="btn btn-info btn-sm">View Details</a>
-															<!-- Edit button -->
-															<a href="{% url 'exam_edit' pk=exam_type.pk %}" class="btn btn-primary btn-sm">Edit</a>
-															<!-- Delete button -->
-															<form action="{% url 'exam_delete' pk=exam_type.pk %}" method="post">
-																{% csrf_token %}
-																<button type="submit" class="btn btn-primary btn-sm btn-delete" style="background-color: #dc3545; color: #fff; border-color: #dc3545;">Delete</button>
-															</form>
-														</div>
-													</td>
-												</tr>
-											{% endfor %}
-
-										</tbody>
-									</table>
-								</div>
-							</div>
+                                <div class="card-body">
+                                    <h1>Choose your IELTS test</h1>
+                                    <hr>
+                                    <p>Which IELTS test would you like to take?</p>
+                                    <div class="test-option">
+                                        <div class="icon">A</div>
+                                        <div class="text">
+                                            <a href="{% url 'home_city' %}"><h2>IELTS Academic</h2></a>
+                                            <p>Take this test if you want to study at undergraduate or postgraduate level, or join a professional organization anywhere in the world. <a href="{% url 'home_city' %}">Learn more &rarr;</a></p>
+                                        </div>
+                                    </div>
+                                    <div class="test-option">
+                                        <div class="icon">G</div>
+                                        <div class="text">
+                                            <a href="{% url 'home_city' %}"><h2>IELTS General Training</h2></a>
+                                            <p>Take this test if you want to study at below degree level or work anywhere in the world. <a href="{% url 'home_city' %}">Learn more &rarr;</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                                      
 						</div>
 					</div>
 				</div>

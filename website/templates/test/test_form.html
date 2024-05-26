@@ -31,7 +31,7 @@
 
 				<ul class="sidebar-nav">
 					<li class="sidebar-item active">
-						<a class="sidebar-link" href="/">
+						<a class="sidebar-link" href={% url 'home' %}>
               <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
             </a>
 			<li class="sidebar-item dropdown">
@@ -111,6 +111,11 @@
 									<i class="align-middle" data-feather="bell"></i>
 									<span class="indicator">4</span>
 								</div>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://api.whatsapp.com/send?phone=+977-9806511974" target="_blank" style="color: #25d366;" title="+977-9806511974">
+								<i class="align-middle" data-feather="message-circle" style="color: #25d366;"></i> <span style="color: #25d366;">WhatsApp</span>
 							</a>
 						</li>
 						<li class="nav-item dropdown">
