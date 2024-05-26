@@ -1,0 +1,12 @@
+1 initially run the server.
+2 comment the "AUTH_USER_MODEL = 'website.CustomUser" in settings.py file
+3 then make migration and migrate truncatechars_html
+4 uncomment the "AUTH_USER_MODEL = 'website.CustomUser" in settings.py file
+5 create superadmin : username , email, password and add other manually like "	1	pbkdf2_sha256$720000$djTs6eiVcGB7BxsaxSX2LG$XjrlsX/aD01cYPVOsvp3nC0sJq2ZNDosHsANHAYfM6s=	
+    2024-05-26 09:17:09.133494	1	british@123	British		british11@gmail.com	1	1	2024-05-24 05:50:32.657478	admin" 
+    as required in databse which not add during making superadmin.
+6 then run the server again 
+7 perform the task as per need 
+
+
+note :" as i donot user admin dashboard provided by django"
