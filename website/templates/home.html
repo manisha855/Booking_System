@@ -20,6 +20,7 @@
 	<link href="{% static 'css/home.css' %}" rel="stylesheet">
 
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	
 </head>
 
 <body>
@@ -29,44 +30,65 @@
 				<a class="sidebar-brand" href="index.html">
           <span class="align-middle">MyProfile</span>
         </a>
-
 				<ul class="sidebar-nav">
 					<li class="sidebar-item active">
 						<a class="sidebar-link" href="/">
-              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
-            </a>
-			<li class="sidebar-item dropdown">
-				<a class="sidebar-link dropdown-toggle" href="#" id="formsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="align-middle" data-feather="check-square"></i> 
-					<span class="align-middle">Forms</span>
-				</a>
-				<div class="dropdown-menu" aria-labelledby="formsDropdown">
-					<a class="dropdown-item" href="{% url 'booking_form' %}">Create</a>
-					<a class="dropdown-item" href="{% url 'booking_list' %}">List</a>
-				</div>
-			</li>
-			<li class="sidebar-item dropdown">
-				<a class="sidebar-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="align-middle" data-feather="user"></i> 
-					<span class="align-middle">Profile</span>
-				</a>
-				<div class="dropdown-menu" aria-labelledby="profileDropdown">
-					<a class="dropdown-item" href="{% url 'profile_create' %}">Create</a>
-					<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
-				</div>
-			</li>
-			
-			<li class="sidebar-item dropdown">
-				<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="align-middle" data-feather="book"></i> 
-					<span class="align-middle">Blank</span>
-				</a>
-				<div class="dropdown-menu" aria-labelledby="blankDropdown">
-					<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
-					<a class="dropdown-item" href="{% url 'submit_name'%}">Test</a>
-				</div>
-			</li>
-			
+					<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+					</a>
+					<li class="sidebar-item dropdown">
+						<a class="sidebar-link dropdown-toggle" href="#" id="formsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="align-middle" data-feather="check-square"></i> 
+							<span class="align-middle">Forms</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="formsDropdown">
+							<a class="dropdown-item" href="{% url 'booking_form' %}">Create</a>
+							<a class="dropdown-item" href="{% url 'booking_list' %}">List</a>
+						</div>
+					</li>
+					<li class="sidebar-item dropdown">
+						<a class="sidebar-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="align-middle" data-feather="user"></i> 
+							<span class="align-middle">Profile</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="profileDropdown">
+							<a class="dropdown-item" href="{% url 'profile_create' %}">Create</a>
+							<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
+						</div>
+					</li>
+					{% if user.is_superuser %}
+						<li class="sidebar-item dropdown">
+							<a class="sidebar-link dropdown-toggle" href="#" id="examTypeDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="align-middle" data-feather="book"></i> 
+								<span class="align-middle">Exam Type</span>
+							</a>
+							<div class="dropdown-menu" aria-labelledby="examTypeDropdown">
+								<a class="dropdown-item" href="{% url 'create_exam_type' %}">Create</a>
+								<a class="dropdown-item" href="{% url 'exam_type_list' %}">List</a>
+							</div>
+						</li>
+						<li class="sidebar-item dropdown">
+							<a class="sidebar-link dropdown-toggle" href="#" id="testScheduleDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="align-middle" data-feather="book"></i> 
+								<span class="align-middle">Test Schedule</span>
+							</a>
+							<div class="dropdown-menu" aria-labelledby="testScheduleDropdown">
+								<a class="dropdown-item" href="{% url 'test_schedules_create' %}">Create</a>
+								<a class="dropdown-item" href="{% url 'test_schedules_list' %}">List</a>
+							</div>
+						</li>
+						<li class="sidebar-item dropdown">
+							<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="align-middle" data-feather="book"></i> 
+								<span class="align-middle">Blank</span>
+							</a>
+							<div class="dropdown-menu" aria-labelledby="blankDropdown">
+								<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
+								<a class="dropdown-item" href="{% url 'submit_name'%}">Test</a>
+							</div>
+						</li>
+					{% endif %}
+
+					
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'logout' %}">
 							<i class="align-middle me-2" data-feather="log-out"></i> <span class="align-middle">Log out</span>
@@ -92,6 +114,12 @@
 								</div>
 							</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://api.whatsapp.com/send?phone=+977-9806511974" target="_blank" style="color: #25d366;" title="+977-9806511974">
+								<i class="align-middle" data-feather="message-circle" style="color: #25d366;"></i> <span style="color: #25d366;">WhatsApp</span>
+							</a>
+						</li>												
+				
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
 								<i class="align-middle" data-feather="settings"></i>
@@ -112,118 +140,13 @@
 
 			<main class="content">
 				<div class="container-fluid p-0">
-
-					<h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
-
-					<div class="row">
-						<div class="col-xl-6 col-xxl-5 d-flex">
-							<div class="w-100">
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="card">
-											<div class="card-body">
-												<div class="row">
-													<div class="col mt-0">
-														<h5 class="card-title">Sales</h5>
-													</div>
-
-													<div class="col-auto">
-														<div class="stat text-primary">
-															<i class="align-middle" data-feather="truck"></i>
-														</div>
-													</div>
-												</div>
-												<h1 class="mt-1 mb-3">2.382</h1>
-												<div class="mb-0">
-													<span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
-													<span class="text-muted">Since last week</span>
-												</div>
-											</div>
-										</div>
-										<div class="card">
-											<div class="card-body">
-												<div class="row">
-													<div class="col mt-0">
-														<h5 class="card-title">Visitors</h5>
-													</div>
-
-													<div class="col-auto">
-														<div class="stat text-primary">
-															<i class="align-middle" data-feather="users"></i>
-														</div>
-													</div>
-												</div>
-												<h1 class="mt-1 mb-3">14.212</h1>
-												<div class="mb-0">
-													<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
-													<span class="text-muted">Since last week</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="card">
-											<div class="card-body">
-												<div class="row">
-													<div class="col mt-0">
-														<h5 class="card-title">Earnings</h5>
-													</div>
-
-													<div class="col-auto">
-														<div class="stat text-primary">
-															<i class="align-middle" data-feather="dollar-sign"></i>
-														</div>
-													</div>
-												</div>
-												<h1 class="mt-1 mb-3">$21.300</h1>
-												<div class="mb-0">
-													<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
-													<span class="text-muted">Since last week</span>
-												</div>
-											</div>
-										</div>
-										<div class="card">
-											<div class="card-body">
-												<div class="row">
-													<div class="col mt-0">
-														<h5 class="card-title">Orders</h5>
-													</div>
-
-													<div class="col-auto">
-														<div class="stat text-primary">
-															<i class="align-middle" data-feather="shopping-cart"></i>
-														</div>
-													</div>
-												</div>
-												<h1 class="mt-1 mb-3">64</h1>
-												<div class="mb-0">
-													<span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
-													<span class="text-muted">Since last week</span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-xl-6 col-xxl-7">
-							<div class="card flex-fill w-100">
-								<div class="card-header">
-
-									<h5 class="card-title mb-0">Recent Movement</h5>
-								</div>
-								<div class="card-body py-3">
-									<div class="chart chart-sm">
-										<canvas id="chartjs-dashboard-line"></canvas>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="container-fluid p-0">
+						<div class="alert alert-success custom-welcome" role="alert" style="color: #4578c2; font-family: Arial, sans-serif; font-weight: bold; font-size: 24px;">
+							WELCOME to BRITISH AMERICAN EDUCARE {{ request.user.first_name }}!!!
+						</div>											
+						<br>
 						<div class="mb-3">
-							<h1 class="h3 d-inline align-middle"> IELTS test fees in Nepal </h1>
+							<h2 class="h3 d-inline align-middle"> IELTS test fees in Nepal </h2>
 						</div>
 						<div class="row">
 							<div class="col-12">

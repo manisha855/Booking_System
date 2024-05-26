@@ -17,10 +17,8 @@
 	<title>Dashboard</title>
 
 	<link href="{% static 'css/app.css' %}" rel="stylesheet">
-    <link href="{% static 'css/home.css' %}" rel="stylesheet">
-
+	<link href="{% static 'css/form.css' %}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="{% static 'button.css' %}">
 </head>
 
 <body>
@@ -53,7 +51,7 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="profileDropdown">
 					<a class="dropdown-item" href="{% url 'profile_create' %}">Create</a>
-					<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
+					<a class="dropdown-item" href="#">List</a>
 				</div>
 			</li>
 			{% if user.is_superuser %}
@@ -84,11 +82,10 @@
 							</a>
 							<div class="dropdown-menu" aria-labelledby="blankDropdown">
 								<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
-								<a class="dropdown-item" href="#">List</a>
+								<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
 							</div>
 						</li>
 					{% endif %}
-			
 			
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'logout' %}">
@@ -134,60 +131,25 @@
 			<main class="content">
 				<div class="container-fluid p-0">
 					<div class="mb-3">
-						<h1 class="h3 d-inline align-middle">Test for all available dates</h1>
+						<h1 class="h3 d-inline align-middle">IELTS Exam Registration</h1>
 					</div>
 					<div class="mt-3">
-						<a href="{% url 'home' %}" class="btn btn-success">Book</a>
+						<a href="{% url 'booking_list' %}" class="btn btn-primary">List</a>
 					</div>
 					<div class="row">
 						<div class="col-12">
 							<div class="card">
-								<div class="card-body1">
-                                    <a class="header" href="{% url 'home_exam_type' %}"><h2>IELTS Academic</h2></a>
-                                    <div class="sub-header">Find a test</div>
-                                    <hr>
-                                    <div class="content1">
-                                        <hr>
-                                        <div class="content">
-                                            <p>Where would you like to take your test?</p>
-                                            <p>Search in: Nepal 
-                                                <a href="#">Change country / territory</a>
-                                            </p>
-                                            <p>Search in: {{ selected_city }}
-												<a href="{% url 'home_city' %}">Change city</a>
-                                            </p>
-                                            <div class="accessibility">
-                                                <input type="checkbox" id="accessibility" name="accessibility" value="accessibility">
-                                                <label for="accessibility">I have accessibility needs for the test date</label>
-                                                <a href="#">Read about how we can help you</a>
-                                            </div>
-                                            <p>When would you like to take your test?</p>
-                                            <p>Please use the table below!!!</p>
-                                            <table style="background-color: lightgray; font-family: Arial, sans-serif;">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Country Name</th>
-                                                        <th>City Name</th>
-                                                        <th>Year</th>
-                                                        <th>Month</th>
-                                                        <th>Day</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <!-- Sample rows -->
-                                                    <tr>
-                                                        <td>Nepal</td>
-                                                        <td>{{ selected_city }}</td>
-                                                        <td>2024</td>
-                                                        <td>04</td>
-                                                        <td>24</td>
-                                                        <td><a href="{% url 'home_book_test' %}"class="btn btn-warning btn-sm">Search for tests</a></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+								<div class="card-header">
+									<h5 class="card-title mb-0">Candidate Information</h5>
+								</div>
+								<div class="card-body">
+									<h1>{% if object %}Edit{% else %}Create{% endif %} Test Schedule</h1>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        {{ form.as_p }}
+                                        <button type="submit">{% if object %}Update{% else %}Create{% endif %}</button>
+                                    </form>
+                                    <a href="{% url 'test_schedules_list' %}">Cancel</a>
 								</div>
 							</div>
 						</div>

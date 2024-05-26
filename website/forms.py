@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, get_user_model
-from .models import CustomUser, Booking, Profile, ExamType, Blank
+from .models import CustomUser, Booking, Profile, ExamType, TestSchedules, Blank
 
 class UserLoginForm(forms.Form):
     username = forms.CharField()
@@ -62,25 +62,6 @@ class BookingForm(forms.ModelForm):
         model = Booking
         fields = ['name', 'passport', 'test_city', 'signature', 'signature_date', 'email', 'phone', 'test_model', 'delivery_method']
     
-
-# class BookingForm(forms.ModelForm):
-#     # city_name = forms.ModelChoiceField(queryset=ExamType.objects.values_list('city_name', flat=True).distinct())
-    
-#     class Meta:
-#         model = Booking
-#         fields = ['name', 'passport', 'test_city', 'signature', 'signature_date', 'email', 'phone', 'test_model', 'delivery_method']
-#         widgets = {
-#             'signature_date': forms.DateInput(attrs={'type': 'date', 'format': 'yyyy-MM-dd'})
-#         }
-
-#     def clean_email(self):
-#         email = self.cleaned_data.get('email')
-#         try:
-#             validate_email(email)
-#         except ValidationError:
-#             raise forms.ValidationError("Please enter a valid email address.")
-#         return email
-    
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
@@ -90,6 +71,11 @@ class ExamForm(forms.ModelForm):
     class Meta:
         model = ExamType
         fields = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_model']   
+
+class TestSchedulesForm(forms.ModelForm):
+    class Meta:
+        model = TestSchedules
+        fields = ['test_type', 'date', 'start_time', 'end_time', 'exam_type']
 
 #Demo
 class BlankForm(forms.ModelForm):

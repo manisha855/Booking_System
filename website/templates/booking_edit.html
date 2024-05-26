@@ -53,17 +53,39 @@
 					<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
 				</div>
 			</li>
+			{% if user.is_superuser %}
+						<li class="sidebar-item dropdown">
+							<a class="sidebar-link dropdown-toggle" href="#" id="examTypeDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="align-middle" data-feather="book"></i> 
+								<span class="align-middle">Exam Type</span>
+							</a>
+							<div class="dropdown-menu" aria-labelledby="examTypeDropdown">
+								<a class="dropdown-item" href="{% url 'create_exam_type' %}">Create</a>
+								<a class="dropdown-item" href="{% url 'exam_type_list' %}">List</a>
+							</div>
+						</li>
+						<li class="sidebar-item dropdown">
+							<a class="sidebar-link dropdown-toggle" href="#" id="testScheduleDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="align-middle" data-feather="book"></i> 
+								<span class="align-middle">Test Schedule</span>
+							</a>
+							<div class="dropdown-menu" aria-labelledby="testScheduleDropdown">
+								<a class="dropdown-item" href="{% url 'test_schedules_create' %}">Create</a>
+								<a class="dropdown-item" href="{% url 'test_schedules_list' %}">List</a>
+							</div>
+						</li>
+						<li class="sidebar-item dropdown">
+							<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="align-middle" data-feather="book"></i> 
+								<span class="align-middle">Blank</span>
+							</a>
+							<div class="dropdown-menu" aria-labelledby="blankDropdown">
+								<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
+								<a class="dropdown-item" href="#">List</a>
+							</div>
+						</li>
+					{% endif %}
 			
-			<li class="sidebar-item dropdown">
-				<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="align-middle" data-feather="book"></i> 
-					<span class="align-middle">Blank</span>
-				</a>
-				<div class="dropdown-menu" aria-labelledby="blankDropdown">
-					<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
-					<a class="dropdown-item" href="#">List</a>
-				</div>
-			</li>
 			
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'logout' %}">

@@ -1,0 +1,12 @@
+[
+  {
+    "model": "website.customuser",
+    "pk": 1,
+    "fields": {
+      "username": "british@123",
+      "email": "british11@example.com",
+      "password": "pbkdf2_sha256$260000$4nXPAp1zAEpF$1GhUGzZcYZvR3JK6doB/q3o3MOiqbFh1g4uFmLT9U5E=",
+      "role": "admin"
+    }
+  }
+]

@@ -45,7 +45,7 @@ class Profile(models.Model):
     course = models.CharField(max_length=100)
     batch = models.CharField(max_length=20)
     major = models.CharField(max_length=100)
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
+    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
