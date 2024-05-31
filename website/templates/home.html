@@ -76,18 +76,18 @@
 								<a class="dropdown-item" href="{% url 'test_schedules_list' %}">List</a>
 							</div>
 						</li>
-						<li class="sidebar-item dropdown">
-							<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="align-middle" data-feather="book"></i> 
-								<span class="align-middle">Blank</span>
-							</a>
-							<div class="dropdown-menu" aria-labelledby="blankDropdown">
-								<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
-								<a class="dropdown-item" href="{% url 'submit_name'%}">Test</a>
-							</div>
-						</li>
-					{% endif %}
 
+					{% endif %}
+					<li class="sidebar-item dropdown">
+						<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="align-middle" data-feather="book"></i> 
+							<span class="align-middle">Transaction</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="blankDropdown">
+							<a class="dropdown-item" href="{% url 'payment' %}">Procede</a>
+							<a class="dropdown-item" href="#">Test</a>
+						</div>
+					</li>
 					
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'logout' %}">
@@ -156,39 +156,26 @@
 											<thead>
 												<tr>
 													<th>Test Type</th>
-													<th>Current Test Fees (valid until 30 April 2024)</th>
-													<th>New Test Fees (on and after 01 May 2024)</th>
+													<th>Test Model</th>
+													<th>British Annual Fees (valid until 30 April 2024)</th>
+													<th>Actual Fees (on and after 01 May 2024)</th>
+													<th>Details Views</th>
 													<th>Book</th>
 												</tr>
 											</thead>
 											<tbody>
+												{% for exam_type in exam_types %}
 												<tr>
-													<td>IELTS on Paper (Academic and General Training)</td>
-													<td>NRP. {{ paper_exam.current_fee }}</td>
-													<td>NPR. {{ paper_exam.newest_fee }}</td>
-													<td><a href="{% url 'home_exam_type' %}" class="book-button">Book Now</a></td>
+													<td>{{ exam_type.test_type }}</td>
+													<td>{{ exam_type.test_model }}</td>
+													<td>NRP. {{ exam_type.current_fee }}</td>
+													<td>NPR. {{ exam_type.newest_fee }}</td>
+													<th><a href="{% url 'home_exam_type' %}">View Details</a></th>
+													<td><a href="{% url 'booking_form' %}" class="book-button">Book Now</a></td>
 												</tr>
-												<tr>
-													<td>IELTS on Computer (Academic and General Training)</td>
-													<td>NPR. {{ computer_exam.current_fee }}</td>
-													<td>NPR. {{ computer_exam.newest_fee }}</td>
-													<td><a href="{% url 'home_exam_type' %}" class="book-button">Book Now</a></td>
-												</tr>
-												<tr>
-													<td>IELTS for UK Visas and Immigration (Academic and General Training)</td>
-													<td>NPR. {{ visa_exam.current_fee }}</td>
-													<td>NPR. {{ visa_exam.newest_fee }}</td>
-													<td><a href="#" class="book-button">Book Now</a></td>
-												</tr>
-												<tr>
-													<td>IELTS Life Skills (A1 and B1)</td>
-													<td>NPR. {{ lifeskill_exam.current_fee }}</td>
-													<td>NPR. {{ lifeskill_exam.newest_fee }}</td>
-													<td><a href="#" class="book-button">Book Now</a></td>
-												</tr>
+												{% endfor %}
 											</tbody>
-										</table>
-										
+										</table>	
 									</div>
 								</div>
 							</div>

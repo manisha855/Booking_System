@@ -75,18 +75,18 @@
 								<a class="dropdown-item" href="{% url 'test_schedules_list' %}">List</a>
 							</div>
 						</li>
-						<li class="sidebar-item dropdown">
-							<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="align-middle" data-feather="book"></i> 
-								<span class="align-middle">Blank</span>
-							</a>
-							<div class="dropdown-menu" aria-labelledby="blankDropdown">
-								<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
-								<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
-							</div>
-						</li>
+						
 					{% endif %}
-			
+					<li class="sidebar-item dropdown">
+						<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="align-middle" data-feather="book"></i> 
+							<span class="align-middle">Transaction</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="blankDropdown">
+							<a class="dropdown-item" href="{% url 'payment' %}">Procede</a>
+							<a class="dropdown-item" href="#">List</a>
+						</div>
+					</li>
 			
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'logout' %}">
@@ -151,10 +151,41 @@
 								<div class="card-body">
 									<form method="post">
 										{% csrf_token %}
-										{{ form.as_p }}
-										<button type="submit">Submit</button>
+										
+										<div class="form-group">
+											<label for="id_test_type">Test Type:</label>
+											{{ form.test_type }}
+										</div>
+										
+										<div class="form-group">
+											<label for="id_date">Date:</label>
+											{{ form.date }}
+										</div>
+										
+										<div class="form-group">
+											<label for="id_start_time">Start Time:</label>
+											{{ form.start_time }}
+										</div>
+										
+										<div class="form-group">
+											<label for="id_end_time">End Time:</label>
+											{{ form.end_time }}
+										</div>
+										
+										<div class="form-group">
+											<label for="id_exam_type">Exam Type:</label>
+											<select id="id_exam_type" name="exam_type" class="form-control">
+												<option value="" selected disabled>Select Exam Type</option>
+												{% for exam in form.fields.exam_type.queryset %}
+													<option value="{{ exam.id }}">{{ exam.test_type }} - {{ exam.city_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+										
+										<button type="submit" class="btn btn-primary">Submit</button>
 									</form>
 								</div>
+								
 							</div>
 						</div>
 					</div>

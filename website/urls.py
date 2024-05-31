@@ -49,10 +49,10 @@ urlpatterns = [
     path('schedules/<int:pk>/edit/', views.test_schedules_update, name='test_schedules_update'),
     path('schedules/<int:pk>/delete/', views.test_schedules_delete, name='test_schedules_delete'),
 
-    path('blank/', views.blank, name='blank'),
-    # path('patner/', views.partner_index, name='patner'),
+    #For tranction
+    path('payment/', views.payment, name='payment'),
 
-    path('submit_name/', views.submit_name, name='submit_name'),
-    path('names/', views.name_list, name='name_list'),
-    
+    # khalti url
+    path('initiate/<int:booking_id>/', views.initkhalti, name='initiate'),
+    path('verify', views.verifykhalti, name='verify'),
 ]

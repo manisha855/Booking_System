@@ -3,9 +3,10 @@ from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth import login as auth_login  
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import SignUpForm, UserLoginForm, BookingForm, ProfileForm, BlankForm, ExamForm, TestSchedulesForm,  NameForm
-from .models import CustomUser, Student, Booking, Profile, ExamType, TestSchedules, Blank,SubmittedName
-
+from .forms import SignUpForm, UserLoginForm, BookForm, ProfileForm, ExamForm, TestSchedulesForm
+from .models import CustomUser, Student, Book, Profile, ExamType, TestSchedules
+import requests
+import json
 
 # Create your views here.
 #IELTS test fees in Nepal
@@ -49,8 +50,16 @@ def home(request):
     computer_exam = ExamType.objects.filter(test_type='computer').first()
     visa_exam = ExamType.objects.filter(test_type='visa').first()
     lifeskill_exam = ExamType.objects.filter(test_type='lifeskill').first()
+    exam_types = ExamType.objects.all()  # Retrieve all exam types
 
-    return render(request, 'home.html', {'students': students, 'paper_exam': paper_exam, 'computer_exam': computer_exam, 'visa_exam': visa_exam, 'lifeskill_exam': lifeskill_exam})
+    return render(request, 'home.html', {
+        'students': students,
+        'paper_exam': paper_exam,
+        'computer_exam': computer_exam,
+        'visa_exam': visa_exam,
+        'lifeskill_exam': lifeskill_exam,
+        'exam_types': exam_types, 
+    })
 
 def login_user(request):
     if request.method == 'POST':
@@ -105,23 +114,23 @@ def register_user(request):
 @login_required
 def booking_form(request):
     if request.method == 'POST':
-        form = BookingForm(request.POST, request.FILES)
+        form = BookForm(request.POST, request.FILES)
         if form.is_valid():
-            booking = form.save(commit=False)
-            booking.creator = request.user  
-            booking.save()
-            return redirect('booking_list')  
+            book = form.save(commit=False)
+            book.creator = request.user  
+            book.save()
+            return redirect('profile_create')
     else:
-        form = BookingForm()     
+        form = BookForm()
     return render(request, 'booking/booking_form.html', {'form': form})
 
 @login_required
 def booking_list(request):
     if request.user.is_authenticated:  # Check if user is authenticated
         if request.user.role == 'admin':  # Check if user is an admin
-            bookings = Booking.objects.all()  # Show all bookings for admin
+            bookings = Book.objects.all()  # Show all bookings for admin
         else:
-            bookings = Booking.objects.filter(creator=request.user)  # Show bookings created by the user
+            bookings = Book.objects.filter(creator=request.user)  # Show bookings created by the user
     else:
         bookings = []  # If user is not authenticated, return empty queryset
     
@@ -129,24 +138,24 @@ def booking_list(request):
 
 @login_required
 def booking_detail(request, pk):
-    booking = get_object_or_404(Booking, pk=pk)
+    booking = get_object_or_404(Book, pk=pk)
     return render(request, 'booking/booking_details.html', {'booking': booking})
 
 @login_required
 def edit_booking(request, booking_id):
-    booking = get_object_or_404(Booking, pk=booking_id)
+    booking = get_object_or_404(Book, pk=booking_id)
     if request.method == 'POST':
-        form = BookingForm(request.POST, instance=booking)
+        form = BookForm(request.POST, instance=booking)
         if form.is_valid():
             form.save()
             return redirect('booking/booking_detail', pk=booking.pk)
     else:
-        form = BookingForm(instance=booking)
+        form = BookForm(instance=booking)
     return render(request, 'booking/booking_edit.html', {'form': form})
 
 @login_required
 def delete_booking(request, booking_id):
-    booking = get_object_or_404(Booking, pk=booking_id)
+    booking = get_object_or_404(Book, pk=booking_id)
     if request.method == 'POST':
         booking.delete()
         return redirect('booking_list')  # Redirect to the booking list page after deletion
@@ -164,15 +173,15 @@ def profile_create(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES)
         if form.is_valid():
-            profile = form.save(commit=False)  
-            profile.creator = request.user  
-            profile.save()  
-            return redirect('profile_detail', pk=profile.pk)
+            profile = form.save(commit=False)
+            profile.creator = request.user
+            profile.save()
+            return redirect('payment')  # Redirect to the blank view
         else:
-            print("Form errors:", form.errors)  # Add this line for debugging
+            print("Form errors:", form.errors)  # This line helps in debugging
             messages.error(request, 'Failed to create profile. Please check the errors.')
     else:
-        form = ProfileForm()   
+        form = ProfileForm()
     return render(request, 'profile/profile_create.html', {'form': form})
 
 @login_required
@@ -249,7 +258,7 @@ def examtype_edit(request, pk):
             return redirect('examtype_list')
     else:
         form = ExamForm(instance=examtype)
-    return render(request, 'exam/examtype_form.html', {'form': form})
+    return render(request, 'exam/exam_type.html', {'form': form})
 
 @login_required
 def exam_delete(request, pk):
@@ -264,9 +273,10 @@ def test_schedules_create(request):
         form = TestSchedulesForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('test_schedules_list')  
+            return redirect('test_schedules_list')
     else:
         form = TestSchedulesForm()
+    
     return render(request, 'test/test_form.html', {'form': form})
 
 # Test schedule list view
@@ -305,36 +315,54 @@ def test_schedules_delete(request, pk):
     return render(request, 'test/test_schedule_delete_confirmation.html', {'test_schedule': test_schedule})
 
 
-
+#For Transaction
+@login_required
+def payment(request):
+    # Assuming you have a Booking model with relevant fields
+    booking = Book.objects.first()  # Get the first booking for demonstration
+    return render(request, 'payment.html', {'booking': booking})
 
 @login_required
-def blank(request):
-    if request.method == 'POST':
-        form = BlankForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('blank')  # Redirect to a success page
-    else:
-        form = BlankForm()
-    return render(request, 'blank.html', {'form': form})
+def initkhalti(request, booking_id):
+    booking = get_object_or_404(Book, pk=booking_id)
+    exam_type = booking.exam_type
+    amount = exam_type.newest_fee 
+    
+    url = "https://a.khalti.com/api/v2/epayment/initiate/"
+    return_url = request.POST.get('return_url')
+    purchase_order_id = request.POST.get('purchase_order_id')
 
-@login_required
-def submit_name(request):
-    if request.method == 'POST':
-        form = NameForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            creator = request.user  # Assuming you are using Django's built-in authentication system
-            SubmittedName.objects.create(name=name, creator=creator)
-            return redirect('name_list')
-    else:
-        form = NameForm()
-    return render(request, 'submit_name.html', {'form': form})
+    print(amount)
+    print(purchase_order_id)
+    print(booking.name)
+    print(booking.email)
+    print(booking.phone)
 
-@login_required
-def name_list(request):
-    names = SubmittedName.objects.filter(creator=request.user)
-    return render(request, 'name_list.html', {'names': names})
+    payload = json.dumps({
+        "return_url": return_url,
+        "website_url": "http://127.0.0.1:8000",
+        "amount": amount,
+        "purchase_order_id": purchase_order_id,
+        "purchase_order_name": "test",
+        "customer_info": {
+            "name": booking.name,
+            "email": booking.email,
+            "phone": booking.phone
+        }
+    })
+    headers = {
+        'Authorization': 'key b53d9c64376448d4b1e190ba4916e6b3',
+        'Content-Type': 'application/json',
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    new_res = json.loads(response.text)
+
+    return redirect(new_res['payment_url'])
+
+def verifykhalti(request):
+    pass
+
 
 def student_record(request, pk):
 	if request.user.is_authenticated:
@@ -355,5 +383,5 @@ def delete_record(request, pk):
 		messages.success(request, "You Must Be Logged In To Do That...")
 		return redirect('home')
 
-def profile(request):
-     return render(request, 'profile.html')
+
+

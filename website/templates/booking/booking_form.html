@@ -75,18 +75,17 @@
 								<a class="dropdown-item" href="{% url 'test_schedules_list' %}">List</a>
 							</div>
 						</li>
-						<li class="sidebar-item dropdown">
-							<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="align-middle" data-feather="book"></i> 
-								<span class="align-middle">Blank</span>
-							</a>
-							<div class="dropdown-menu" aria-labelledby="blankDropdown">
-								<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
-								<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
-							</div>
-						</li>
 					{% endif %}
-			
+					<li class="sidebar-item dropdown">
+						<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="align-middle" data-feather="book"></i> 
+							<span class="align-middle">Transaction</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="blankDropdown">
+							<a class="dropdown-item" href="{% url 'payment' %}">Procede</a>
+							<a class="dropdown-item" href="#">List</a>
+						</div>
+					</li>
 			
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'logout' %}">
@@ -149,53 +148,19 @@
 									<h5 class="card-title mb-0">Candidate Information</h5>
 								</div>
 								<div class="card-body">
-									<form method="post" enctype="multipart/form-data" class="form-container">
+									{% for exam_type in exam_types %}
+									<div class="form-group">
+										<label for="id_test_model">Test Model ({{ exam_type.test_model }}):</label>
+										<input type="radio" id="id_test_model_{{ exam_type.id }}" name="test_model" value="{{ exam_type.test_model }}">
+									</div>
+									{% endfor %}
+									
+									<form method="post" enctype="multipart/form-data">
 										{% csrf_token %}
-										<div class="column">
-											<!-- Left column content -->
-											<div class="form-group">
-												<label for="id_name">Passport Name:</label>
-												{{ form.name }}
-											</div>
-											<div class="form-group">
-												<label for="id_passport">Passport No:</label>
-												{{ form.passport }}
-											</div>
-											<div class="form-group">
-												<label for="id_city_name">Select City:</label>
-												{{ form.test_city }}
-											</div>
-											<div class="form-group">
-												<label for="id_signature">Signature:</label>
-												{{ form.signature }}
-											</div>
-											<div class="form-group">
-												<label for="id_signature_date">Signature Date:</label>
-												{{ form.signature_date }}
-											</div>
-											<button type="submit">Submit</button>
-											<a href="{% url 'home_book_test' %}" class="btn btn-primary btn-sm">Book Your Exam Date</a>
-										</div>
-										<div class="column">
-											<!-- Right column content -->
-											<div class="form-group">
-												<label for="id_email">Email:</label>
-												{{ form.email }}
-											</div>
-											<div class="form-group">
-												<label for="id_phone">Phone:</label>
-												{{ form.phone }}
-											</div>
-											<div class="form-group">
-												<label for="id_test_model">Test Model:</label>
-												{{ form.test_model }}
-											</div>
-											<div class="form-group">
-												<label for="id_delivery_method">Delivery Method:</label>
-												{{ form.delivery_method }}
-											</div>
-										</div>
+										{{ form.as_p }}
+										<button type="submit">Submit</button>
 									</form>
+									
 								</div>
 							</div>
 						</div>

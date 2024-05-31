@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, get_user_model
-from .models import CustomUser, Booking, Profile, ExamType, TestSchedules, Blank
+from .models import CustomUser, Book, Profile, ExamType, TestSchedules
 
 class UserLoginForm(forms.Form):
     username = forms.CharField()
@@ -56,12 +56,7 @@ class SignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user 
-    
-class BookingForm(forms.ModelForm):
-    class Meta:
-        model = Booking
-        fields = ['name', 'passport', 'test_city', 'signature', 'signature_date', 'email', 'phone', 'test_model', 'delivery_method']
-    
+        
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
@@ -70,18 +65,28 @@ class ProfileForm(forms.ModelForm):
 class ExamForm(forms.ModelForm):
     class Meta:
         model = ExamType
-        fields = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_model']   
+        fields = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_model']
 
 class TestSchedulesForm(forms.ModelForm):
     class Meta:
         model = TestSchedules
         fields = ['test_type', 'date', 'start_time', 'end_time', 'exam_type']
 
-#Demo
-class BlankForm(forms.ModelForm):
-    class Meta:
-        model = Blank
-        fields = ['name'] 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['exam_type'].queryset = ExamType.objects.all()
 
-class NameForm(forms.Form):
-    name = forms.CharField(max_length=100)
+#Booking    
+class BookForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(BookForm, self).__init__(*args, **kwargs)
+        self.fields['exam_type'].choices = self.get_exam_type_choices()
+
+    def get_exam_type_choices(self):
+        exam_types = ExamType.objects.all()
+        choices = [(exam_type.id, f"{exam_type.test_type} - {exam_type.city_name}") for exam_type in exam_types]
+        return choices
+    
+    class Meta:
+        model = Book
+        fields = ['name', 'passport', 'test_city', 'passportfile', 'email', 'phone', 'exam_type', 'test_schedule']

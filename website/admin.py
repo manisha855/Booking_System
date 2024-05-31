@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Student, Booking, Profile, ExamType, TestSchedules
+from .models import CustomUser, Student, Book, Profile, ExamType, TestSchedules
 from django import forms
 from django.contrib.auth.admin import UserAdmin
 
@@ -29,9 +29,7 @@ class TestScheduleAdminForm(forms.ModelForm):
     class Meta:
         model = TestSchedules
         fields = '__all__'
-        widgets = {
-            'exam_type': forms.Select(choices=ExamType.TEST_TYPE_CHOICES),
-        }
+        
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'email', 'phone_number', 'date_of_birth', 'address', 'student_id', 'course', 'batch', 'major', 'profile_image']
     search_fields = ['full_name', 'email', 'phone_number', 'student_id']
@@ -39,7 +37,7 @@ class ProfileAdmin(admin.ModelAdmin):
 class ExamTypeAdmin(admin.ModelAdmin):
     list_display = ['test_type', 'test_model','city_name', 'location', 'current_fee', 'newest_fee']
     list_filter = ['test_type', 'test_model']
-    search_fields = ['city_name', 'location']
+    search_fields = ['city_name', 'test_type','location']
 
 admin.site.register(ExamType, ExamTypeAdmin)
 
@@ -52,7 +50,7 @@ class TestScheduleAdmin(admin.ModelAdmin):
 
 # Register all models except TestSchedule
 admin.site.register(Student)
-admin.site.register(Booking)
+admin.site.register(Book)
 admin.site.register(Profile,ProfileAdmin)
 
 # Register TestSchedule using the custom admin class

@@ -75,19 +75,18 @@
 								<a class="dropdown-item" href="{% url 'test_schedules_list' %}">List</a>
 							</div>
 						</li>
-						<li class="sidebar-item dropdown">
-							<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="align-middle" data-feather="book"></i> 
-								<span class="align-middle">Blank</span>
-							</a>
-							<div class="dropdown-menu" aria-labelledby="blankDropdown">
-								<a class="dropdown-item" href="{% url 'blank' %}">Create</a>
-								<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
-							</div>
-						</li>
 					{% endif %}
 			
-			
+					<li class="sidebar-item dropdown">
+						<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="align-middle" data-feather="book"></i> 
+							<span class="align-middle">Transaction</span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="blankDropdown">
+							<a class="dropdown-item" href="{% url 'payment' %}">Procede</a>
+							<a class="dropdown-item" href="#">List</a>
+						</div>
+					</li>
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'logout' %}">
 							<i class="align-middle me-2" data-feather="log-out"></i> <span class="align-middle">Log out</span>
@@ -150,36 +149,30 @@
 								</div>
 								<div class="card-body">
 									<form method="post">
-                                        {% csrf_token %}
-                                        <label for="city_name">City Name:</label><br>
-                                        <input type="text" id="city_name" name="city_name"><br>
-                                        
-                                        <label for="location">Location:</label><br>
-                                        <input type="text" id="location" name="location"><br>
-                                        
-                                        <label for="current_fee">Current Fee:</label><br>
-                                        <input type="number" id="current_fee" name="current_fee"><br>
-                                        
-                                        <label for="newest_fee">Newest Fee:</label><br>
-                                        <input type="number" id="newest_fee" name="newest_fee"><br>
-                                        
-                                        <label for="test_type">Test Type:</label><br>
-                                        <select id="test_type" name="test_type">
-                                            {% for key, value in form.fields.test_type.choices %}
-                                            <option value="{{ key }}">{{ value }}</option>
-                                            {% endfor %}
-                                        </select><br>
-                                        
-                                        <label for="test_model">Test Model:</label><br>
-                                        <select id="test_model" name="test_model">
-                                            {% for key, value in form.fields.test_model.choices %}
-                                            <option value="{{ key }}">{{ value }}</option>
-                                            {% endfor %}
-                                        </select><br>
-                                        
-                                        <button type="submit">Submit</button>
-                                    </form>
+										{% csrf_token %}
+										
+										<label for="city_name">City Name:</label><br>
+										<input type="text" id="city_name" name="city_name"><br>
+										
+										<label for="location">Location:</label><br>
+										<input type="text" id="location" name="location"><br>
+										
+										<label for="current_fee">Current Fee:</label><br>
+										<input type="number" id="current_fee" name="current_fee"><br>
+										
+										<label for="newest_fee">Newest Fee:</label><br>
+										<input type="number" id="newest_fee" name="newest_fee"><br>
+										
+										<label for="test_type">Test Type:</label><br>
+										<input type="text" id="test_type" name="test_type"><br>
+										
+										<label for="test_model">Test Model:</label><br>
+										<input type="text" id="test_model" name="test_model"><br>
+										
+										<button type="submit">Submit</button>
+									</form>
 								</div>
+																
 							</div>
 						</div>
 					</div>

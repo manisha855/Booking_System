@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'CRM.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'british_booking_system',
+        'NAME': 'british_bookings_system',
         'USER': 'root',
         'PASSWORD':'1234',
         'HOST':'localhost',
