@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Student, Book, Profile, ExamType, TestSchedules
+from .models import CustomUser, Book, Profile, ExamType, TestSchedules
 from django import forms
 from django.contrib.auth.admin import UserAdmin
 
@@ -49,7 +49,6 @@ class TestScheduleAdmin(admin.ModelAdmin):
     search_fields = ('test_type', 'exam_type__city_name') 
 
 # Register all models except TestSchedule
-admin.site.register(Student)
 admin.site.register(Book)
 admin.site.register(Profile,ProfileAdmin)
 

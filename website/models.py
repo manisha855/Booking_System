@@ -82,18 +82,18 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile -> {self.full_name}"
-
-
-#model for student
-class Student(models.Model):
-    create_at = models.DateTimeField(auto_now_add=True)
-    username = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.CharField(max_length=50)
-    phone = models.CharField(max_length=15)
-    address = models.CharField(max_length=100)
-    partner = models.BooleanField(default=False) 
+    
+class Transaction(models.Model):
+    pidx = models.CharField(max_length=255)
+    transaction_id = models.CharField(max_length=255)
+    tidx = models.CharField(max_length=255)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    mobile = models.CharField(max_length=20)
+    status = models.CharField(max_length=50)
+    purchase_order_id = models.CharField(max_length=255)
+    purchase_order_name = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Student->{self.first_name}"
+        return f"Transaction {self.transaction_id} - {self.status}"    

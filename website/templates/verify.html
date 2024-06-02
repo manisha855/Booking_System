@@ -10,7 +10,7 @@
 	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="{% static 'img/icons/icon-48x48.png' %}" />
+	<link rel="shortcut icon" href="static/img/images/logo.jpg" />
 
 	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
@@ -18,6 +18,7 @@
 
 	<link href="{% static 'css/app.css' %}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'button.css' %}">
 </head>
 
 <body>
@@ -30,17 +31,17 @@
 
 				<ul class="sidebar-nav">
 					<li class="sidebar-item active">
-						<a class="sidebar-link" href="/">
+						<a class="sidebar-link" href={% url 'home' %}>
               <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
             </a>
-            <li class="sidebar-item dropdown">
+			<li class="sidebar-item dropdown">
 				<a class="sidebar-link dropdown-toggle" href="#" id="formsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="align-middle" data-feather="check-square"></i> 
 					<span class="align-middle">Forms</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="formsDropdown">
 					<a class="dropdown-item" href="{% url 'booking_form' %}">Create</a>
-					<a class="dropdown-item" href="#">List</a>
+					<a class="dropdown-item" href="{% url 'booking_list' %}">List</a>
 				</div>
 			</li>
 			<li class="sidebar-item dropdown">
@@ -50,7 +51,7 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="profileDropdown">
 					<a class="dropdown-item" href="{% url 'profile_create' %}">Create</a>
-					<a class="dropdown-item" href="{% url 'profile_list'%}">List</a>
+					<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
 				</div>
 			</li>
 			{% if user.is_superuser %}
@@ -74,9 +75,8 @@
 								<a class="dropdown-item" href="{% url 'test_schedules_list' %}">List</a>
 							</div>
 						</li>
-
+						
 					{% endif %}
-			
 					<li class="sidebar-item dropdown">
 						<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<i class="align-middle" data-feather="book"></i> 
@@ -86,7 +86,8 @@
 							<a class="dropdown-item" href="{% url 'payment' %}">Procede</a>
 							<a class="dropdown-item" href="#">List</a>
 						</div>
-					</li>
+					</li>	
+						
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="{% url 'logout' %}">
 							<i class="align-middle me-2" data-feather="log-out"></i> <span class="align-middle">Log out</span>
@@ -112,6 +113,11 @@
 								</div>
 							</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://api.whatsapp.com/send?phone=+977-9806511974" target="_blank" style="color: #25d366;" title="+977-9806511974">
+								<i class="align-middle" data-feather="message-circle" style="color: #25d366;"></i> <span style="color: #25d366;">WhatsApp</span>
+							</a>
+						</li>	
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
 								<i class="align-middle" data-feather="settings"></i>
@@ -130,52 +136,41 @@
 			
 			<main class="content">
 				<div class="container-fluid p-0">
-					<h1 class="h3 mb-3">Transaction </h1>
+					<div class="mb-3">
+						<h1 class="h3 d-inline align-middle">Invoice List</h1>
+					</div>
+					<div class="mt-3">
+                        <a href="{% url 'booking_form' %}" class="btn btn-success">Create </a>
+                    </div>
 					<div class="row">
 						<div class="col-12">
 							<div class="card">
-								<div class="card-header">
-									<h5 class="card-title mb-0">Paymeny Details</h5>
-								</div>
-								<div class="row">
-									<div class="col-12">
-										<div class="card">
-											<div class="card-body">
-												<div class="booking-info">
-													{% comment %} <p><strong>Booked By:</strong> {{ booking.creator.username }}</p> {% endcomment %}
-													<p><strong>Name:</strong> {{ booking.name }}</p>
-													<p><strong>Passport:</strong> {{ booking.passport }}</p>
-													<p><strong>Test City:</strong> {{ booking.test_city }}</p>
-													<p><strong>Email:</strong> {{ booking.email }}</p>
-													<p><strong>Phone:</strong> {{ booking.phone }}</p>
-													<p><strong>Exam Type:</strong> {{ booking.exam_type }}</p>
-													<p><strong>Amount:</strong> {{ booking.exam_type.newest_fee }}</p>
-													<p><strong>Test Schedule:</strong> {{ booking.test_schedule  }}</p>
-												</div>
-											</div> 
-										</div>
-									</div>
-								</div>
 								<div class="card-body">
-									<form action="{% url 'initiate' booking.id %}" method="POST">
-										{% csrf_token %}
-										<input type="hidden" name="purchase_order_id" value="britrans1002">
-										<input type="hidden" name="amount" value="{{ booking.exam_type.newest_fee }}">
-										<input type="hidden" name="return_url" value="http://127.0.0.1:8000/verify/">
-										<div class="form-group form-check">
-											<input type="checkbox" class="form-check-input" id="confirmation-checkbox" required>
-											<label class="form-check-label" for="confirmation-checkbox">I confirm that I want to proceed with the payment.</label>
-										</div>
-										<input type="submit" class="btn btn-primary" value="Pay with Khalti">
-									</form>
-								</div>	
+                                    {% if error %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ error }}
+                                        </div>
+                                    {% else %}
+                                        <ul class="list-group">
+                                            <li class="list-group-item"><strong>Transaction ID:</strong> {{ transaction.transaction_id }}</li>
+                                            <li class="list-group-item"><strong>TIDX:</strong> {{ transaction.tidx }}</li>
+                                            <li class="list-group-item"><strong>PIDX:</strong> {{ transaction.pidx }}</li>
+                                            <li class="list-group-item"><strong>Amount:</strong> {{ transaction.amount }}</li>
+                                            <li class="list-group-item"><strong>Total Amount:</strong> {{ transaction.total_amount }}</li>
+                                            <li class="list-group-item"><strong>Status:</strong> {{ transaction.status }}</li>
+                                            <li class="list-group-item"><strong>Mobile:</strong> {{ transaction.mobile }}</li>
+                                            <li class="list-group-item"><strong>Purchase Order ID:</strong> {{ transaction.purchase_order_id }}</li>
+                                            <li class="list-group-item"><strong>Purchase Order Name:</strong> {{ transaction.purchase_order_name }}</li>
+                                        </ul>
+                                    {% endif %}
+                                </div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</main>
 			
-            <footer class="footer">
+			<footer class="footer">
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-6 text-start">

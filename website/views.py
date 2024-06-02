@@ -4,9 +4,12 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import SignUpForm, UserLoginForm, BookForm, ProfileForm, ExamForm, TestSchedulesForm
-from .models import CustomUser, Student, Book, Profile, ExamType, TestSchedules
+from .models import CustomUser, Book, Profile, ExamType, TestSchedules
 import requests
 import json
+from django.http import HttpResponse
+from django.http import JsonResponse
+from .models import Transaction
 
 # Create your views here.
 #IELTS test fees in Nepal
@@ -45,7 +48,6 @@ def root_redirect(request):
 # Home 
 @login_required
 def home(request):
-    students = Student.objects.all()
     paper_exam = ExamType.objects.filter(test_type='paper').first()
     computer_exam = ExamType.objects.filter(test_type='computer').first()
     visa_exam = ExamType.objects.filter(test_type='visa').first()
@@ -53,7 +55,6 @@ def home(request):
     exam_types = ExamType.objects.all()  # Retrieve all exam types
 
     return render(request, 'home.html', {
-        'students': students,
         'paper_exam': paper_exam,
         'computer_exam': computer_exam,
         'visa_exam': visa_exam,
@@ -318,25 +319,22 @@ def test_schedules_delete(request, pk):
 #For Transaction
 @login_required
 def payment(request):
-    # Assuming you have a Booking model with relevant fields
-    booking = Book.objects.first()  # Get the first booking for demonstration
-    return render(request, 'payment.html', {'booking': booking})
+    booking = Book.objects.first()  
+    if booking:
+        return render(request, 'payment.html', {'booking': booking})
+    else:
+        return HttpResponse("No booking found")
 
 @login_required
 def initkhalti(request, booking_id):
     booking = get_object_or_404(Book, pk=booking_id)
     exam_type = booking.exam_type
-    amount = exam_type.newest_fee 
+    amount = exam_type.newest_fee
     
-    url = "https://a.khalti.com/api/v2/epayment/initiate/"
-    return_url = request.POST.get('return_url')
-    purchase_order_id = request.POST.get('purchase_order_id')
 
-    print(amount)
-    print(purchase_order_id)
-    print(booking.name)
-    print(booking.email)
-    print(booking.phone)
+    url = "https://a.khalti.com/api/v2/epayment/initiate/"
+    return_url = "http://127.0.0.1:8000/verify/"  
+    purchase_order_id = request.POST.get('purchase_order_id')
 
     payload = json.dumps({
         "return_url": return_url,
@@ -350,38 +348,81 @@ def initkhalti(request, booking_id):
             "phone": booking.phone
         }
     })
+
+    print(return_url)
+    print(booking.name)
+    print(booking.email)
+    print(booking.phone)
+    print(purchase_order_id)
+    print(amount)
+
     headers = {
         'Authorization': 'key b53d9c64376448d4b1e190ba4916e6b3',
         'Content-Type': 'application/json',
     }
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.post(url, headers=headers, data=payload)
+    print(response.text)
     new_res = json.loads(response.text)
-
+    print(new_res)
     return redirect(new_res['payment_url'])
+   
 
+@login_required
 def verifykhalti(request):
-    pass
+    pidx = request.GET.get('pidx')
+    status = request.GET.get('status')
+    transaction_id = request.GET.get('transaction_id')
+    tidx = request.GET.get('tidx')
+    amount = request.GET.get('amount')
+    total_amount = request.GET.get('total_amount')
+    mobile = request.GET.get('mobile')
+    purchase_order_id = request.GET.get('purchase_order_id')
+    purchase_order_name = request.GET.get('purchase_order_name')
 
+    if not pidx:
+        return JsonResponse({'error': 'pidx parameter is missing'}, status=400)
 
-def student_record(request, pk):
-	if request.user.is_authenticated:
-		# Look Up Records
-		student_record = Student.objects.get(id=pk)
-		return render(request, 'student.html', {'student_record':student_record})
-	else:
-		messages.success(request, "You Must Be Logged In To View That Page...")
-		return redirect('home')
+    # Convert amount and total_amount to decimal
+    try:
+        amount = float(amount)
+        total_amount = float(total_amount)
+    except (ValueError, TypeError):
+        return JsonResponse({'error': 'Invalid amount format'}, status=400)
 
-def delete_record(request, pk):
-	if request.user.is_authenticated:
-		delete_it = Student.objects.get(id=pk)
-		delete_it.delete()
-		messages.success(request, "Record Deleted Successfully...")
-		return redirect('home')
-	else:
-		messages.success(request, "You Must Be Logged In To Do That...")
-		return redirect('home')
+    # Save the transaction data to the database
+    transaction = Transaction(
+        pidx=pidx,
+        status=status,
+        transaction_id=transaction_id,
+        tidx=tidx,
+        amount=amount,
+        total_amount=total_amount,
+        mobile=mobile,
+        purchase_order_id=purchase_order_id,
+        purchase_order_name=purchase_order_name,
+    )
+    transaction.save()
+
+    context = {
+        'transaction': {
+            'pidx': pidx,
+            'status': status,
+            'transaction_id': transaction_id,
+            'tidx': tidx,
+            'amount': amount,
+            'total_amount': total_amount,
+            'mobile': mobile,
+            'purchase_order_id': purchase_order_id,
+            'purchase_order_name': purchase_order_name,
+        }
+    }
+
+    if status == 'Completed':
+        return render(request, 'verify.html', context)
+    else:
+        context['error'] = 'Transaction not completed'
+        return render(request, 'verify.html', context)
 
 
 

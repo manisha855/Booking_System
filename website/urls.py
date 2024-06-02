@@ -14,11 +14,7 @@ urlpatterns = [
     path('home/', views.home, name='home'), 
     path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
-    path('register/', views.register_user, name='register'), 
-
-    # parntner Registraion
-    path('student/<int:pk>', views.student_record, name='student'),
-    path('delete_record/<int:pk>', views.delete_record, name='delete_record'),
+    path('register/', views.register_user, name='register'),
 
     #Booking for students
     path('booking_form/', views.booking_form, name='booking_form'),
@@ -54,5 +50,8 @@ urlpatterns = [
 
     # khalti url
     path('initiate/<int:booking_id>/', views.initkhalti, name='initiate'),
-    path('verify', views.verifykhalti, name='verify'),
+    path('payment/', views.payment, name='payment'),
+    path('initkhalti/<int:booking_id>/', views.initkhalti, name='initkhalti'),
+    path('verify/', views.verifykhalti, name='verifykhalti'),
+
 ]
