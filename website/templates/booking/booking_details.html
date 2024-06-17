@@ -1,201 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-{%  load static %}
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+{% extends 'layout/base.html' %}
 
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="static/img/images/logo.jpg" />
-
-	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
-
-	<title>Dashboard</title>
-
-	<link href="{% static 'css/app.css' %}" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
-
-<body>
-	<div class="wrapper">
-		<nav id="sidebar" class="sidebar js-sidebar">
-			<div class="sidebar-content js-simplebar">
-				<a class="sidebar-brand" href="index.html">
-          <span class="align-middle">MyProfile</span>
-        </a>
-
-				<ul class="sidebar-nav">
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href={% url 'home' %}>
-              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
-            </a>
-			<li class="sidebar-item dropdown">
-				<a class="sidebar-link dropdown-toggle" href="#" id="formsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="align-middle" data-feather="check-square"></i> 
-					<span class="align-middle">Forms</span>
-				</a>
-				<div class="dropdown-menu" aria-labelledby="formsDropdown">
-					<a class="dropdown-item" href="{% url 'booking_form' %}">Create</a>
-					<a class="dropdown-item" href="#">List</a>
-				</div>
-			</li>
-			<li class="sidebar-item dropdown">
-				<a class="sidebar-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="align-middle" data-feather="user"></i> 
-					<span class="align-middle">Profile</span>
-				</a>
-				<div class="dropdown-menu" aria-labelledby="profileDropdown">
-					<a class="dropdown-item" href="{% url 'profile_create' %}">Create</a>
-					<a class="dropdown-item" href="{% url 'profile_list' %}">List</a>
-				</div>
-			</li>
-			{% if user.is_superuser %}
-						<li class="sidebar-item dropdown">
-							<a class="sidebar-link dropdown-toggle" href="#" id="examTypeDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="align-middle" data-feather="book"></i> 
-								<span class="align-middle">Exam Type</span>
-							</a>
-							<div class="dropdown-menu" aria-labelledby="examTypeDropdown">
-								<a class="dropdown-item" href="{% url 'create_exam_type' %}">Create</a>
-								<a class="dropdown-item" href="{% url 'exam_type_list' %}">List</a>
-							</div>
-						</li>
-						<li class="sidebar-item dropdown">
-							<a class="sidebar-link dropdown-toggle" href="#" id="testScheduleDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="align-middle" data-feather="book"></i> 
-								<span class="align-middle">Test Schedule</span>
-							</a>
-							<div class="dropdown-menu" aria-labelledby="testScheduleDropdown">
-								<a class="dropdown-item" href="{% url 'test_schedules_create' %}">Create</a>
-								<a class="dropdown-item" href="{% url 'test_schedules_list' %}">List</a>
-							</div>
-						</li>
-						{% endif %}
-
-						<li class="sidebar-item dropdown">
-							<a class="sidebar-link dropdown-toggle" href="#" id="blankDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="align-middle" data-feather="book"></i> 
-								<span class="align-middle">Transaction</span>
-							</a>
-							<div class="dropdown-menu" aria-labelledby="blankDropdown">
-								<a class="dropdown-item" href="{% url 'payment' %}">Procede</a>
-								<a class="dropdown-item" href="#">List</a>
-							</div>
-						</li>
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="{% url 'logout' %}">
-							<i class="align-middle me-2" data-feather="log-out"></i> <span class="align-middle">Log out</span>
-						</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
-
-		<div class="main">
-			<nav class="navbar navbar-expand navbar-light navbar-bg">
-				<a class="sidebar-toggle js-sidebar-toggle">
-					<i class="hamburger align-self-center"></i>
-				</a>
-			
-				<div class="navbar-collapse collapse">
-					<ul class="navbar-nav navbar-align">
-						<li class="nav-item dropdown">
-							<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
-								<div class="position-relative">
-									<i class="align-middle" data-feather="bell"></i>
-									<span class="indicator">4</span>
-								</div>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="https://api.whatsapp.com/send?phone=+977-9806511974" target="_blank" style="color: #25d366;" title="+977-9806511974">
-								<i class="align-middle" data-feather="message-circle" style="color: #25d366;"></i> <span style="color: #25d366;">WhatsApp</span>
-							</a>
-						</li>	
-						<li class="nav-item dropdown">
-							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
-								<i class="align-middle" data-feather="settings"></i>
-							</a>
-			
-							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-								<span class="text-dark">{{ request.user.first_name }}</span>
-							</a>	
-							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-								<li><a class="dropdown-item" href="{% url 'logout' %}"><i class="align-middle me-1" data-feather="log-out"></i> Log out</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</nav>
-			
-            <main class="content">
-				<div class="container-fluid p-0">
-					<div class="mb-3">
-						<h1 class="h3 d-inline align-middle">Candidate Booking Detail</h1>
-					</div>
-                    <div class="mt-3">
-                        <a href="{% url 'booking_form' %}" class="btn btn-success">Create </a>
-                        <a href="{% url 'booking_list' %}" class="btn btn-primary">List</a>
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle">Candidate Booking Detail of {{ booking.name }}s</h1>
+    </div>
+    <div class="mt-3">
+        {% if request.user.is_superuser or request.user.role == 'partner' %}
+        <a href="{% url 'booking_form' %}" class="btn btn-success">Create</a>
+        <a href="{% url 'booking_list' %}" class="btn btn-primary">List</a>
+        {% endif %}
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body1">
+                    <h1 class="card-title">Booking Detail </h1>
+                    <div class="booking-info">
+                        <div>
+                            <h3>A. Personal Information</h3>
+                            <p><strong>Name:</strong> {{ booking.name }}</p>
+                            <p><strong>Passport No:</strong> {{ booking.passport_no }}</p>
+                            <p><strong>Passport Expiry Date:</strong> {{ booking.passport_expiry_date }}</p>
+                            <p><strong>Passport Issuing Authority:</strong> {{ booking.passport_issuing_authority }}</p>
+                            <p><strong>Passport File:</strong> <a href="{{ booking.passport_file.url }}">Download</a></p>
+                            <p><strong>Test City:</strong> {{ booking.city_name }}</p>
+                            <p><strong>Location:</strong> {{ booking.location }}</p>
+                            <p><strong>Test Mode:</strong> {{ booking.test_mode }}</p>
+                            <p><strong>Test Date:</strong> {{ booking.test_date }}</p>
+                            <p><strong>Test Time:</strong> {{ booking.test_time }}</p>
+                            <p><strong>Test Type:</strong> {{ booking.test_type }}</p>
+                            <p><strong>Email:</strong> {{ booking.email }}</p>
+                            <p><strong>Date of Birth:</strong> {{ booking.dob }}</p>
+                            <p><strong>Mobile:</strong> {{ booking.mobileno }}</p>
+                            <p><strong>Gender:</strong> {{ booking.get_gender_display }}</p>
+                        </div>  
+                        <div>
+                            <h3>B. Exam Details</h3>
+                            <p><strong>Exam Type:</strong> {{ booking.exam_type }}</p>
+                            <p><strong>Exam Type - City Name:</strong> {{ booking.exam_type.city_name }}</p>
+                            <p><strong>Exam Type - Location:</strong> {{ booking.exam_type.location }}</p>
+                            <p><strong>Exam Type - Test Mode:</strong> {{ booking.exam_type.test_mode }}</p>
+                            <p><strong>Exam Type - Test Date:</strong> {{ booking.exam_type.test_date }}</p>
+                            <p><strong>Exam Type - Test Time:</strong> {{ booking.exam_type.test_time }}</p>
+                            <p><strong>Exam Type - Test Type:</strong> {{ booking.exam_type.test_type }}</p>
+                            <p><strong>Exam Type - Test Fee:</strong> {{ booking.exam_type.newest_fee }}</p>
+                        </div>
+                        <div> 
+                            <h3>C. Additional Details</h3>    
+                            <p><strong>Test Taker's First Language:</strong> {{ booking.test_takers_first_language }}</p>
+                            <p><strong>Test Taker's Country:</strong> {{ booking.test_takers_country }}</p>
+                            <p><strong>Education Level:</strong> {{ booking.education_level }}</p>
+                            <p><strong>Occupation Sector:</strong> {{ booking.occupation_sector }}</p>
+                            <p><strong>Occupation Level:</strong> {{ booking.occupation_level }}</p>
+                            <p><strong>Interest in IELTS:</strong> {{ booking.interest_in_ielts }}</p>
+                            <p><strong>Purpose:</strong> {{ booking.purpose }}</p>
+                            <p><strong>Created At:</strong> {{ booking.created_at }}</p>
+                        </div>       
                     </div>
-					<div class="row">
-						<div class="col-12">
-							<div class="card">
-								<div class="card-body">
-                                    <h1 class="card-title">Booking Detail</h1>
-                                    <div class="booking-info">
-                                        <p><strong>Name:</strong> {{ booking.name }}</p>
-                                        <p><strong>Passport:</strong> {{ booking.passport }}</p>
-                                        <p><strong>Exam Date:</strong> {{ booking.exam_date }}</p>
-                                        <p><strong>Test City:</strong> {{ booking.test_city }}</p>
-                                        <p><strong>Email:</strong> {{ booking.email }}</p>
-                                        <p><strong>Phone:</strong> {{ booking.phone }}</p>
-										<p><strong>Exam Type:</strong> {{ booking.exam_type }}</p>
-										<p><strong>Test Schedule:</strong> {{ booking.test_schedule  }}</p>
-                                    </div>
-                                </div> 
-							</div>
-						</div>
-					</div>
-				</div>
-			</main>
+                    {% if request.user.role == 'student' %}
+                    <p><a href="#" id="edit-link">Edit</a>For student </p>
+                    <div id="edit-form" style="display: none;">
+                        <form method="post" action="{% url 'edit_mobile_email' booking.id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_mobile">Mobile:</label>
+                                <input type="text" class="form-control" id="id_mobile" name="mobile" value="{{ booking.mobileno }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_email">Email:</label>
+                                <input type="email" class="form-control" id="id_email" name="email" value="{{ booking.email }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    <div class="card-body1">
+                        <form action="{% url 'initiate' booking.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="purchase_order_id" value="britrans1002">
+                            <input type="hidden" name="amount" value="{{ booking.exam_type.newest_fee }}">
+                            <input type="hidden" name="return_url" value="http://127.0.0.1:8000/verify/">
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="confirmation-checkbox" required>
+                                <label class="form-check-label" for="confirmation-checkbox">I confirm that I want to proceed with the payment.</label>
+                            </div>
+                            <input type="submit" class="btn btn-primary" value="Pay with Khalti">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-			<footer class="footer">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-md-6 text-start">
-							<p class="mb-0">
-								<a class="text-muted" href="#" target="_blank"><strong style="color: blue;">British American EDUCARE</strong></a> - 
-								<a class="text-muted" href="#" target="_blank"><strong style="color: red;">Empowering Education</strong></a> &copy; 2024
-							</p>
-						</div>
-						<div class="col-md-6 text-end">
-							<ul class="list-inline">
-								<li class="list-inline-item">
-									<a class="text-muted" href="#">Support</a>
-								</li>
-								<li class="list-inline-item">
-									<a class="text-muted" href="#">Help Center</a>
-								</li>
-								<li class="list-inline-item">
-									<a class="text-muted" href="#">Privacy</a>
-								</li>
-								<li class="list-inline-item">
-									<a class="text-muted" href="#">Terms</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</footer>
-		</div>
-	</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var editLink = document.getElementById('edit-link');
+    var editForm = document.getElementById('edit-form');
 
-	<script src="{% static 'js/app.js' %}"></script>
-
-</body>
-
-</html>
+    if (editLink) {
+        editLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            editForm.style.display = 'block';
+        });
+    }
+});
+</script>
+{% endblock %}

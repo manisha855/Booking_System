@@ -1,8 +1,10 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm as DjangoPasswordResetForm, SetPasswordForm as DjangoSetPasswordForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, get_user_model
-from .models import CustomUser, Book, Profile, ExamType, TestSchedules
+from .models import CustomUser, Book, ExamType
+from django.utils import timezone
+
 
 class UserLoginForm(forms.Form):
     username = forms.CharField()
@@ -25,12 +27,13 @@ class UserLoginForm(forms.Form):
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}))
     first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
+    middle_name = forms.CharField(label="", max_length=100, required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Middle Name'}))
     last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
-    role = forms.ChoiceField(label="Role", choices=[('individual', 'Individual'), ('partner', 'Partner')])
+    role = forms.ChoiceField(label="Role", choices=[('student', 'Student'), ('partner', 'Partner')])
 
     class Meta:
-        model = CustomUser  
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'role')
+        model = CustomUser
+        fields = ('username', 'first_name', 'middle_name', 'last_name', 'email', 'password1', 'password2', 'role')
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
@@ -53,40 +56,47 @@ class SignUpForm(UserCreationForm):
     def save(self, commit=True):
         user = super(SignUpForm, self).save(commit=False)
         user.role = self.cleaned_data['role']
+        user.middle_name = self.cleaned_data['middle_name']
         if commit:
             user.save()
-        return user 
+        return user
+    
+class PasswordResetForm(DjangoPasswordResetForm):
+    pass
+
+class SetPasswordForm(DjangoSetPasswordForm):
+    pass
         
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['full_name', 'profile_image', 'email', 'phone_number', 'date_of_birth', 'address', 'student_id', 'course', 'batch', 'major'] 
-
 class ExamForm(forms.ModelForm):
-    class Meta:
+    class Meta: 
         model = ExamType
-        fields = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_model']
-
-class TestSchedulesForm(forms.ModelForm):
-    class Meta:
-        model = TestSchedules
-        fields = ['test_type', 'date', 'start_time', 'end_time', 'exam_type']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['exam_type'].queryset = ExamType.objects.all()
+        fields = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_mode', 'test_date', 'test_time']
 
 #Booking    
 class BookForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(BookForm, self).__init__(*args, **kwargs)
-        self.fields['exam_type'].choices = self.get_exam_type_choices()
-
-    def get_exam_type_choices(self):
-        exam_types = ExamType.objects.all()
-        choices = [(exam_type.id, f"{exam_type.test_type} - {exam_type.city_name}") for exam_type in exam_types]
-        return choices
-    
     class Meta:
         model = Book
-        fields = ['name', 'passport', 'test_city', 'passportfile', 'email', 'phone', 'exam_type', 'test_schedule']
+        fields = [
+            'dob', 'name', 'email', 'mobileno', 'country', 'address_line',
+            'town_or_city', 'passport_no', 'passport_expiry_date',
+            'passport_issuing_authority', 'passport_file', 'exam_type',
+            'gender', 'test_takers_first_language', 'test_takers_country',
+            'education_level', 'occupation_sector', 'occupation_level',
+            'interest_in_ielts', 'purpose'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(BookForm, self).__init__(*args, **kwargs)
+        self.fields['exam_type'].queryset = ExamType.objects.all()
+
+    def clean_dob(self):
+        dob = self.cleaned_data.get('dob')
+        if dob and dob > timezone.now().date():
+            raise forms.ValidationError('Date of birth cannot be in the future.')
+        return dob
+
+
+class MobileEmailForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ['mobileno', 'email']

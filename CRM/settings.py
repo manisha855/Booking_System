@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-dha#km-m4chfo13yxsv7@-fvt(y7vl+!56fw4erm(vngao79v^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = ['https://egyptian-techniques-ban-missile.trycloudflare.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -63,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'website.context_processors.dynamic_title',  # Add your custom context processor here
             ],
         },
     },
@@ -133,3 +135,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sahmanisha2078@gmail.com'
+EMAIL_HOST_PASSWORD = 'admin@123'
+
+

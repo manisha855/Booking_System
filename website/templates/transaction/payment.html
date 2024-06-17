@@ -1,0 +1,48 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+	<h1 class="h3 mb-3">Transaction </h1>
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title mb-0">Paymeny Details</h5>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="booking-info">
+									{% comment %} <p><strong>Booked By:</strong> {{ booking.creator.username }}</p> {% endcomment %}
+									<p><strong>Name:</strong> {{ booking.name }}</p>
+									<p><strong>Passport:</strong> {{ booking.passport }}</p>
+									<p><strong>Test City:</strong> {{ booking.test_city }}</p>
+									<p><strong>Email:</strong> {{ booking.email }}</p>
+									<p><strong>Phone:</strong> {{ booking.mobile }}</p>
+									<p><strong>Exam Type:</strong> {{ booking.exam_type }}</p>
+									<p><strong>Amount:</strong> {{ booking.exam_type.newest_fee }}</p>
+									<p><strong>Test Schedule:</strong> {{ booking.test_schedule  }}</p>
+								</div>
+							</div> 
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<form action="{% url 'initiate' booking.id %}" method="POST">
+						{% csrf_token %}
+						<input type="hidden" name="purchase_order_id" value="britrans1002">
+						<input type="hidden" name="amount" value="{{ booking.exam_type.newest_fee }}">
+						<input type="hidden" name="return_url" value="http://127.0.0.1:8000/verify/">
+						<div class="form-group form-check">
+							<input type="checkbox" class="form-check-input" id="confirmation-checkbox" required>
+							<label class="form-check-label" for="confirmation-checkbox">I confirm that I want to proceed with the payment.</label>
+						</div>
+						<input type="submit" class="btn btn-primary" value="Pay with Khalti">
+					</form>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock%}

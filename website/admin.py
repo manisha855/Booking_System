@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Book, Profile, ExamType, TestSchedules
+from .models import CustomUser, Book, ExamType
 from django import forms
 from django.contrib.auth.admin import UserAdmin
 
@@ -23,35 +23,16 @@ class CustomUserAdmin(UserAdmin):
 
 # Register CustomUser with the custom admin class
 admin.site.register(CustomUser, CustomUserAdmin)
-
-# Define the custom form for TestSchedule
-class TestScheduleAdminForm(forms.ModelForm):
-    class Meta:
-        model = TestSchedules
-        fields = '__all__'
         
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['full_name', 'email', 'phone_number', 'date_of_birth', 'address', 'student_id', 'course', 'batch', 'major', 'profile_image']
-    search_fields = ['full_name', 'email', 'phone_number', 'student_id']
+    list_display = ('full_name', 'profile_image', 'phone_number', 'address', 'phone')
 
 class ExamTypeAdmin(admin.ModelAdmin):
-    list_display = ['test_type', 'test_model','city_name', 'location', 'current_fee', 'newest_fee']
-    list_filter = ['test_type', 'test_model']
-    search_fields = ['city_name', 'test_type','location']
+    list_display = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_mode', 'test_date', 'test_time']
 
 admin.site.register(ExamType, ExamTypeAdmin)
 
-# Define the admin class for TestSchedule
-class TestScheduleAdmin(admin.ModelAdmin):
-    form = TestScheduleAdminForm
-    list_display = ('test_type', 'date', 'start_time', 'end_time', 'exam_type')
-    list_filter = ('test_type', 'date', 'exam_type')
-    search_fields = ('test_type', 'exam_type__city_name') 
 
 # Register all models except TestSchedule
 admin.site.register(Book)
-admin.site.register(Profile,ProfileAdmin)
-
-# Register TestSchedule using the custom admin class
-admin.site.register(TestSchedules, TestScheduleAdmin)
-
+# admin.site.register(Profile,ProfileAdmin)

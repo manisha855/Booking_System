@@ -1,14 +1,17 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import get_user_model
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
-        ('individual', 'Individual'),
+        ('student', 'Student'),
         ('partner', 'Partner')
     )
     
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    middle_name = models.CharField(max_length=100, blank=True, null=True)
     
     class Meta:
         verbose_name = 'User'
@@ -18,71 +21,92 @@ class CustomUser(AbstractUser):
 CustomUser._meta.get_field('groups').remote_field.related_name = 'custom_user_groups'
 CustomUser._meta.get_field('user_permissions').remote_field.related_name = 'custom_user_permissions'
 
-#Exam Tyes set by admin
+# Exam Types set by admin
 class ExamType(models.Model):
     city_name = models.CharField(max_length=100)
     location = models.CharField(max_length=200)
     current_fee = models.IntegerField()
     newest_fee = models.IntegerField()
     test_type = models.CharField(max_length=20)  
-    test_model = models.CharField(max_length=20)  
+    test_mode = models.CharField(max_length=20)  
+    test_date = models.DateField()  
+    test_time = models.TimeField()
+
 
     def __str__(self):
-        return f"{self.city_name} ExamType - {self.test_type}"
+        return f"ExamType - {self.test_type}, City: {self.city_name}, Location: {self.location}, Test Date: {self.test_date}, Test Time: {self.test_time}"
     
-# for testschedule  by admin  
-class TestSchedules(models.Model):
-    TEST_TYPES = (
-        ('LRW', 'LRW'),
-        ('Listening', 'Listening'),
-    )
-
-    test_type = models.CharField(max_length=20, choices=TEST_TYPES)
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    exam_type = models.ForeignKey(ExamType, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.test_type} test on {self.date} ({self.start_time} - {self.end_time}) at ({self.exam_type})"
-
-    @property
-    def exam_type_choices(self):
-        return ExamType.objects.values_list('test_type', flat=True).distinct()    
-    
-#Model for booking
+# Model for booking
 class Book(models.Model):
-    name = models.CharField(max_length=100)
-    passport = models.CharField(max_length=100)
-    test_city = models.CharField(max_length=100, blank=True)
-    passportfile = models.FileField(upload_to='pdf_files/')  # FileField for passport
-    email = models.EmailField()
-    phone = models.CharField(max_length=20)
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+    ]
+
+    dob = models.DateField(verbose_name="Date of Birth")
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    mobileno = PhoneNumberField()
+    country = models.CharField(max_length=100)
+    address_line = models.CharField(max_length=255)
+    town_or_city = models.CharField(max_length=100)
+    passport_no = models.CharField(max_length=50)
+    passport_expiry_date = models.DateField()
+    passport_issuing_authority = models.CharField(max_length=100)
+    passport_file = models.FileField(upload_to='passports/')
+    exam_type = models.ForeignKey(ExamType, on_delete=models.CASCADE)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    test_takers_first_language = models.CharField(max_length=100)
+    test_takers_country = models.CharField(max_length=100)
+    education_level = models.CharField(max_length=50)
+    occupation_sector = models.CharField(max_length=50)
+    occupation_level = models.CharField(max_length=50)
+    interest_in_ielts = models.CharField(max_length=50)
+    purpose = models.CharField(max_length=50)
+    created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    exam_type = models.ForeignKey('ExamType', on_delete=models.CASCADE)
-    test_schedule = models.ForeignKey('TestSchedules', on_delete=models.CASCADE)
+
+     # Additional fields from ExamType
+    city_name = models.CharField(max_length=100, blank=True, null=True)
+    location = models.CharField(max_length=200, blank=True, null=True)
+    test_mode = models.CharField(max_length=20, blank=True, null=True)
+    test_date = models.DateField(blank=True, null=True)
+    test_time = models.TimeField(blank=True, null=True)
+    test_type = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
-        return f"Booking - {self.name}" 
-    
-class Profile(models.Model):
-    full_name = models.CharField(max_length=100)
-    profile_image = models.ImageField(upload_to='profile_images/')
-    email = models.EmailField()
-    phone_number = models.CharField(max_length=15)
-    date_of_birth = models.DateField()
-    address = models.TextField()
-    student_id = models.CharField(max_length=20)
-    course = models.CharField(max_length=100)
-    batch = models.CharField(max_length=20)
-    major = models.CharField(max_length=100)
-    creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+        return self.name
 
-    def __str__(self):
-        return f"Profile -> {self.full_name}"
-    
+    def clean(self):
+        if self.dob > timezone.now().date():
+            raise ValidationError('Date of birth cannot be in the future.')
+
+    def save(self, *args, **kwargs):
+        if self.exam_type:
+            # Fetch fields from ExamType if an ExamType is selected
+            self.city_name = self.exam_type.city_name
+            self.location = self.exam_type.location
+            self.test_mode = self.exam_type.test_mode
+            self.test_date = self.exam_type.test_date
+            self.test_time = self.exam_type.test_time
+            self.test_type = self.exam_type.test_type
+        else:
+            # Clear only the additional fields if no ExamType is selected
+            self.city_name = None
+            self.location = None
+            self.test_mode = None
+            self.test_date = None
+            self.test_time = None
+            self.test_type = None
+
+        # Call full_clean to perform model validation
+        self.full_clean()
+
+        # Call super to save the model instance
+        super().save(*args, **kwargs)
+
+     
 class Transaction(models.Model):
     pidx = models.CharField(max_length=255)
     transaction_id = models.CharField(max_length=255)
@@ -94,6 +118,7 @@ class Transaction(models.Model):
     purchase_order_id = models.CharField(max_length=255)
     purchase_order_name = models.CharField(max_length=255)
     created_on = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"Transaction {self.transaction_id} - {self.status}"    
+        return f"Transaction {self.transaction_id} - {self.status}"

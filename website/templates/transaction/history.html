@@ -1,0 +1,45 @@
+<!-- transaction_list.html -->
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-3">Transaction List</h1>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Amount</th>
+                                    <th>Mobile</th>
+                                    <th>Status</th>
+                                    <th>Created On</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transactions %}
+                                <tr>
+                                    <td>{{ transaction.transaction_id }}</td>
+                                    <td>{{ transaction.amount }}</td>
+                                    <td>{{ transaction.mobile }}</td>
+                                    <td>{{ transaction.status }}</td>
+                                    <td>{{ transaction.created_on }}</td>
+                                    <td>
+                                        <!-- Add any action buttons or links here -->
+                                        <a href="#">View Details</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

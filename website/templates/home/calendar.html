@@ -1,0 +1,73 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle">List Of Exam Dates</h1>
+    </div>
+    <div class="mt-3">
+        <a href="{% url 'home' %}" class="btn btn-success">Back</a>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            {% for calendar_html in calendar_first_half %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    {{ calendar_html|safe }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-6">
+            {% for calendar_html in calendar_second_half %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    {{ calendar_html|safe }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get exam dates from context
+        var examDates = JSON.parse('{{ exam_dates|escapejs }}');
+        
+        // Convert exam dates to a more usable format
+        examDates = examDates.map(dateStr => new Date(dateStr));
+
+        // Highlight exam dates in the calendar
+        examDates.forEach(function(date) {
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;  // JavaScript months are 0-based
+            var day = date.getDate();
+
+            // Select the table corresponding to the month and year
+            var calendarTables = document.querySelectorAll('table');
+            calendarTables.forEach(function(table) {
+                // Find the month and year from the table's header
+                var header = table.querySelector('th');
+                if (header) {
+                    var headerText = header.innerText.trim();
+                    var [headerMonth, headerYear] = headerText.split(' ');
+                    var headerMonthIndex = new Date(Date.parse(headerMonth + " 1, 2012")).getMonth() + 1;
+                    var headerYearInt = parseInt(headerYear);
+
+                    // If this table matches the month and year, highlight the day
+                    if (headerMonthIndex === month && headerYearInt === year) {
+                        var cells = table.querySelectorAll('td');
+                        cells.forEach(function(cell) {
+                            if (parseInt(cell.innerText) === day) {
+                                cell.style.backgroundColor = "#ccffcc";  // Highlight color (light green)
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
