@@ -1,5 +1,5 @@
 from django.urls import path
-# from .views import CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetConfirmView, CustomPasswordResetCompleteView
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from . import views
 
 urlpatterns = [
@@ -11,19 +11,18 @@ urlpatterns = [
     path('generate-calendar/', views.generate_calendar, name='generate_calendar'),
 
     path('find-test/', views.home_find_test, name='home_find_test'),
+    # path('users/', views.user_list, name='user_list'),
     
     #User Role
-    path('', views.root_redirect, name='root'), 
-    path('home/', views.home, name='home'), 
+    path('', views.home, name='home'),
     path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
     path('register/', views.register_user, name='register'),  
 
-    # path('reset-password/', CustomPasswordResetView.as_view(), name='password_reset'),
-    # path('reset-password/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
-    # path('reset-password/confirm/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    # path('reset-password/complete/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
-
+    path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),    
 
     #Booking for students
     path('booking_form/', views.booking_form, name='booking_form'),

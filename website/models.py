@@ -21,6 +21,16 @@ class CustomUser(AbstractUser):
 CustomUser._meta.get_field('groups').remote_field.related_name = 'custom_user_groups'
 CustomUser._meta.get_field('user_permissions').remote_field.related_name = 'custom_user_permissions'
 
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    reset_token = models.CharField(max_length=32, blank=True, null=True)
+
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+models.signals.post_save.connect(create_user_profile, sender=CustomUser)
+
 # Exam Types set by admin
 class ExamType(models.Model):
     city_name = models.CharField(max_length=100)

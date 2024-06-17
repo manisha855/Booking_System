@@ -159,7 +159,7 @@
                         <fieldset>
                             <legend><strong>B. Exam Information</strong></legend>
                             <div class="mb-3">
-                                {{ form.exam_type.label_tag }}
+                                <label for="{{ form.exam_type.id_for_label }}">Exam Details:</label> 
                                 {{ form.exam_type }}
                                 {% if form.exam_type.errors %}
                                     <div class="text-danger">
@@ -170,6 +170,7 @@
                                 {% endif %}
                             </div>
                         </fieldset>
+                        
 
                         <!-- Third section of the form -->
                         <fieldset>

@@ -60,19 +60,18 @@ class SignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
-    
-class PasswordResetForm(DjangoPasswordResetForm):
-    pass
 
-class SetPasswordForm(DjangoSetPasswordForm):
-    pass
-        
+#password reset form    
+class PasswordResetForm(forms.Form):
+    email = forms.EmailField(label="Email", max_length=254)
+
+#exam form (setting of admin)        
 class ExamForm(forms.ModelForm):
     class Meta: 
         model = ExamType
         fields = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_mode', 'test_date', 'test_time']
 
-#Booking    
+#Booking  done by admin, student & partners for students details  
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
@@ -95,7 +94,7 @@ class BookForm(forms.ModelForm):
             raise forms.ValidationError('Date of birth cannot be in the future.')
         return dob
 
-
+# Mobile & email edit for student only
 class MobileEmailForm(forms.ModelForm):
     class Meta:
         model = Book

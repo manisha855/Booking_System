@@ -5,7 +5,7 @@
         </a>
         <ul class="sidebar-nav">
             <li class="sidebar-item active">
-                <a class="sidebar-link" href="{% url 'home' %}">
+                <a class="sidebar-link" href="/">
                     <i class="align-middle" data-feather="sliders"></i>
                     <span class="align-middle">Dashboard</span>
                 </a>
@@ -31,10 +31,10 @@
                     <span class="align-middle">My Details</span>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="profileDropdown">
-                    <a class="dropdown-item" href="{% url 'booking_list' %}">Details</a>
-                    {% if request.user.is_superuser or request.user.role == 'partner' %}
-                    <a class="dropdown-item" href="#">List</a>
-                    {% endif %}
+                    {% comment %} {% if request.user.is_superuser %}
+                    <a class="dropdown-item" href="#"> User List</a>
+                    {% endif %} {% endcomment %}
+                    <a class="dropdown-item" href="{% url 'booking_list'%}">Details</a>
                 </div>
             </li>
             

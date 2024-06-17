@@ -1,0 +1,11 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Password Reset Request
+From: no-reply@example.com
+To: raj@gamil.com
+Date: Mon, 17 Jun 2024 06:48:15 -0000
+Message-ID: <171860689577.13828.1416270744881660626@ManiSha>
+
+Click the link to reset your password: http://127.0.0.1:8000/password_reset_confirm/SYjnkC1ObFCjiTH0DC6Bq8GzM1zUvf3n/
+-------------------------------------------------------------------------------

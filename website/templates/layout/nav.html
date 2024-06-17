@@ -5,8 +5,8 @@
     <span class="navbar-text" style="font-weight: bold; font-size: 1.2em; color: #343a40;">
         {% if request.user.role == 'admin' %}
             Admin Portal
-        {% elif request.user.role == 'agent' %}
-            Agent Portal
+        {% elif request.user.role == 'partner' %}
+            Partner Portal
         {% elif request.user.role == 'student' %}
             Student Portal
         {% endif %}

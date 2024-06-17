@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth import login as auth_login  
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import PasswordResetView
 from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.views import PasswordResetView
 from django.contrib import messages
 from .forms import SignUpForm, UserLoginForm, BookForm,MobileEmailForm, ExamForm
 from .models import CustomUser, Book, ExamType
@@ -14,6 +16,7 @@ from django.http import JsonResponse
 from .models import Transaction
 import calendar
 from datetime import date
+from django.contrib.auth.decorators import user_passes_test
 
 # Create your views here.
 #IELTS test fees in Nepal 
@@ -79,25 +82,19 @@ def home_find_test(request):
 def home_book_test(request):
     return render(request, 'home/home_book_test.html')
 
-#Root Redirect
-@login_required
-def root_redirect(request):
-    return redirect('register')
-
-# Home 
+#Home Redirect
 @login_required
 def home(request):
-    paper_exam = ExamType.objects.filter(test_type='paper').first()
-    computer_exam = ExamType.objects.filter(test_type='computer').first()
-    visa_exam = ExamType.objects.filter(test_type='visa').first()
-    lifeskill_exam = ExamType.objects.filter(test_type='lifeskill').first()
     exam_types = ExamType.objects.all()
+    exams = {
+        'paper_exam': exam_types.filter(test_type='paper').first(),
+        'computer_exam': exam_types.filter(test_type='computer').first(),
+        'visa_exam': exam_types.filter(test_type='visa').first(),
+        'lifeskill_exam': exam_types.filter(test_type='lifeskill').first(),
+    }
 
     return render(request, 'home.html', {
-        'paper_exam': paper_exam,
-        'computer_exam': computer_exam,
-        'visa_exam': visa_exam,
-        'lifeskill_exam': lifeskill_exam,
+        **exams,
         'exam_types': exam_types,
     })
 
@@ -124,10 +121,32 @@ def login_user(request):
     # If the request method is GET or form is invalid, render the login form
     return render(request, "webapp/login.html", {'form': form})
 
-# class CustomPasswordResetView(PasswordResetView):
-#     template_name = 'webapp/password_reset.html'
-#     email_template_name = 'webapp/password_reset_email.html'  
-#     success_url = reverse_lazy('password_reset_done')
+#Password Reset
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'users/password_reset.html'
+    email_template_name = 'users/password_reset_email.html'
+    subject_template_name = 'users/password_reset_subject'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('users-home')
+
+#Register user list for admin view only
+@user_passes_test(lambda u: u.is_superuser)
+def user_list(request):
+    users = CustomUser.objects.all()  
+    user_role = None
+    
+    if request.user.is_authenticated:
+        user_role = request.user.role 
+    
+    context = {
+        'users': users,
+        'user_role': user_role,
+    }
+    
+    return render(request, 'admin/user_list.html', context)
 
 def logout_user(request):
     logout(request)
@@ -186,13 +205,15 @@ def booking_list(request):
 
     if request.user.is_authenticated:
         user_role = request.user.role
+        
         if user_role == 'admin':
             all_bookings = Book.objects.all()
         else:
             all_bookings = Book.objects.filter(created_by=request.user)
 
         creators = CustomUser.objects.filter(book__in=all_bookings).distinct()
-        categorized_bookings = {creator: Book.objects.filter(created_by=creator) for creator in creators}
+
+        categorized_bookings = {creator: all_bookings.filter(created_by=creator) for creator in creators}
 
     return render(request, 'booking/booking_list.html', {
         'categorized_bookings': categorized_bookings,

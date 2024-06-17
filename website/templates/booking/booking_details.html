@@ -59,7 +59,8 @@
                         </div>       
                     </div>
                     {% if request.user.role == 'student' %}
-                    <p><a href="#" id="edit-link">Edit</a>For student </p>
+                    <p><a href="#" id="edit-link">Edit</a>For student</p>
+                    <p><a href="#" class="ml-2">Any Query</a></p>
                     <div id="edit-form" style="display: none;">
                         <form method="post" action="{% url 'edit_mobile_email' booking.id %}">
                             {% csrf_token %}
