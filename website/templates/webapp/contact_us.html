@@ -1,0 +1,60 @@
+{% extends 'webapp/base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #911a09;
+    }
+
+    /* Form container with blue background */
+    .form-container {
+        background-color: #201c6a;
+        padding: 20px;
+        border-radius: 10px;
+        color: #ffffff;  /* Changed text color to white */
+    }
+    .col-form-label {
+        color: #ffffff; 
+    }
+</style>
+
+<div class="col-md-6 offset-md-3 form-container">
+    <h1>Contact Us</h1>
+    <hr>
+    <br/>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-secondary">Submit</button>
+    </form>
+</div>
+<script>
+    // JavaScript to toggle password visibility
+    document.getElementById('password1-toggle').addEventListener('click', function() {
+        var passwordField = document.getElementById('{{ form.password1.id_for_label }}');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            this.classList.remove('fa-eye');
+            this.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            this.classList.remove('fa-eye-slash');
+            this.classList.add('fa-eye');
+        }
+    });
+
+    document.getElementById('password2-toggle').addEventListener('click', function() {
+        var confirmPasswordField = document.getElementById('{{ form.password2.id_for_label }}');
+        if (confirmPasswordField.type === 'password') {
+            confirmPasswordField.type = 'text';
+            this.classList.remove('fa-eye');
+            this.classList.add('fa-eye-slash');
+        } else {
+            confirmPasswordField.type = 'password';
+            this.classList.remove('fa-eye-slash');
+            this.classList.add('fa-eye');
+        }
+    });
+</script>
+{% endblock %}

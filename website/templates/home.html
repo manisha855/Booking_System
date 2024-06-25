@@ -5,47 +5,135 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid p-0">
-    <div class="container-fluid p-0">
-        <div class="alert alert-success custom-welcome" role="alert" style="color: #4578c2; font-family: Arial, sans-serif; font-weight: bold; font-size: 24px;">
-            WELCOME to BRITISH AMERICAN EDUCARE {{ request.user.username }}!!!
-        </div>											
-        <br>
-        <div class="mb-3">
-            <h2 class="h3 d-inline align-middle"> IELTS test fees in Nepal </h2>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <table class="booking-table">
-                            <thead>
-                                <tr>
-                                    <th>Test Type</th>
-                                    <th>Test Model</th>
-                                    <th>British Annual Fees (valid until 30 April 2024)</th>
-                                    <th>Actual Fees (on and after 01 May 2024)</th>
-                                    <th>Details Views</th>
-                                    <th>Book</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for exam_type in exam_types %}
-                                <tr>
-                                    <td>{{ exam_type.test_type }}</td>
-                                    <td>{{ exam_type.test_mode }}</td>
-                                    <td>NRP. {{ exam_type.current_fee }}</td>
-                                    <td>NPR. {{ exam_type.newest_fee }}</td>
-                                    <td><a href="{% url 'home_find_test' %}">View Exam Date</a></td>
-                                    <td><a href="{% url 'booking_form' %}" class="booking-button">Book Now</a></td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>	
+    {% if request.user.is_authenticated %}
+        {% if request.user.registered_by is None %}
+            <div class="container-fluid p-0">
+                <div class="alert alert-success custom-welcome" role="alert" style="color: #4578c2; font-family: Arial, sans-serif; font-weight: bold; font-size: 24px;">
+                    WELCOME to BRITISH AMERICAN EDUCARE {{ request.user.username }}!!!
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Students</h5>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="stat text-primary">
+                                            <i class="align-middle" data-feather="user-graduate"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">{{ student_count|default:"0" }}</h1>
+                                <div class="mb-0">
+                                    <span class="text-muted">Total students in the system</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Partners</h5>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="stat text-primary">
+                                            <i class="align-middle" data-feather="user"></i> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">{{ partner_count|default:"0" }}</h1>
+                                <div class="mb-0">
+                                    <span class="text-muted">Total partners in the system</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Exam Booked</h5>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="stat text-primary">
+                                            <i class="align-middle" data-feather="calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">{{ exam_booked_count|default:"0" }}</h1>
+                                <div class="mb-0">
+                                    <span class="text-muted">Total exams booked</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 
+                <br>
+                
+                <div class="mb-3">
+                    <a href="{% url 'booking_form' %}" class="btn btn-success">Book Now</a>
+                    <h2 class="h3 d-inline align-middle">IELTS test in Nepal</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="booking-table">
+                                    <thead>
+                                        <tr>
+                                            <th>S.N.</th>
+                                            <th>Test Type</th>
+                                            <th>Test Mode</th>
+                                            <th>British Annual Fees (valid until 30 April 2024)</th>
+                                            <th>Actual Fees (on and after 01 May 2024)</th>
+                                            <th>City Name</th>
+                                            <th>Location</th>
+                                            {% comment %} <th>Test Date</th> {% endcomment %}
+                                            {% comment %} <th>Actions</th> {% endcomment %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for exam_type in exam_types %}
+                                            <tr>
+                                                <td>{{ exam_type.id }}</td>
+                                                <td>{{ exam_type.test_type }}</td>
+                                                <td>{{ exam_type.test_mode }}</td>
+                                                <td>NRP. {{ exam_type.current_fee }}</td>
+                                                <td>NPR. {{ exam_type.newest_fee }}</td>
+                                                <td>{{ exam_type.city_name }}</td>
+                                                <td>{{ exam_type.location }}</td>
+                                                    {% comment %} <td>
+                                                        <select name="exam_date" id="exam_date_{{ exam_type.id }}" class="form-select">
+                                                            <option value="">Select a date</option>
+                                                            {% for exam_date in exam_dates %}
+                                                                {% if exam_date.exam_type_id == exam_type.id %}
+                                                                    <option value="{{ exam_date.id }}">{{ exam_date.test_date }}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </select>
+                                                        <input type="hidden" name="exam_type" value="{{ exam_type.id }}">
+                                                    </td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-success">Book Selected</button>
+                                                    </td> {% endcomment %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>		
-</div>
+        {% endif %}
+    {% endif %}
 {% endblock %}

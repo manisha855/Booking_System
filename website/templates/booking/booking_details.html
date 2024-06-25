@@ -3,92 +3,84 @@
 {% block content %}
 <div class="container-fluid p-0">
     <div class="mb-3">
-        <h1 class="h3 d-inline align-middle">Candidate Booking Detail of {{ booking.name }}s</h1>
+        <h1 class="h3 d-inline align-middle">Candidate Booking Detail of {{ booking.name }}</h1>
     </div>
     <div class="mt-3">
         {% if request.user.is_superuser or request.user.role == 'partner' %}
-        <a href="{% url 'booking_form' %}" class="btn btn-success">Create</a>
-        <a href="{% url 'booking_list' %}" class="btn btn-primary">List</a>
+            <a href="{% url 'booking_list' %}" class="btn btn-primary">List</a>
         {% endif %}
     </div>
     <div class="row mt-3">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-body1">
-                    <h1 class="card-title">Booking Detail </h1>
+                <div class="card-body">
+                    <h5 class="card-title">Booking Detail</h5>
+                    {% if request.user.is_superuser or request.user.role == 'partner' %}
+                        <div class="mb-3">
+                            <p>Booked by: {{ booking.created_by.username }}</p>
+                        </div>
+                    {% endif %}
                     <div class="booking-info">
                         <div>
-                            <h3>A. Personal Information</h3>
-                            <p><strong>Name:</strong> {{ booking.name }}</p>
-                            <p><strong>Passport No:</strong> {{ booking.passport_no }}</p>
-                            <p><strong>Passport Expiry Date:</strong> {{ booking.passport_expiry_date }}</p>
-                            <p><strong>Passport Issuing Authority:</strong> {{ booking.passport_issuing_authority }}</p>
-                            <p><strong>Passport File:</strong> <a href="{{ booking.passport_file.url }}">Download</a></p>
-                            <p><strong>Test City:</strong> {{ booking.city_name }}</p>
-                            <p><strong>Location:</strong> {{ booking.location }}</p>
-                            <p><strong>Test Mode:</strong> {{ booking.test_mode }}</p>
-                            <p><strong>Test Date:</strong> {{ booking.test_date }}</p>
-                            <p><strong>Test Time:</strong> {{ booking.test_time }}</p>
-                            <p><strong>Test Type:</strong> {{ booking.test_type }}</p>
-                            <p><strong>Email:</strong> {{ booking.email }}</p>
-                            <p><strong>Date of Birth:</strong> {{ booking.dob }}</p>
-                            <p><strong>Mobile:</strong> {{ booking.mobileno }}</p>
-                            <p><strong>Gender:</strong> {{ booking.get_gender_display }}</p>
-                        </div>  
-                        <div>
-                            <h3>B. Exam Details</h3>
-                            <p><strong>Exam Type:</strong> {{ booking.exam_type }}</p>
-                            <p><strong>Exam Type - City Name:</strong> {{ booking.exam_type.city_name }}</p>
-                            <p><strong>Exam Type - Location:</strong> {{ booking.exam_type.location }}</p>
-                            <p><strong>Exam Type - Test Mode:</strong> {{ booking.exam_type.test_mode }}</p>
-                            <p><strong>Exam Type - Test Date:</strong> {{ booking.exam_type.test_date }}</p>
-                            <p><strong>Exam Type - Test Time:</strong> {{ booking.exam_type.test_time }}</p>
-                            <p><strong>Exam Type - Test Type:</strong> {{ booking.exam_type.test_type }}</p>
-                            <p><strong>Exam Type - Test Fee:</strong> {{ booking.exam_type.newest_fee }}</p>
+                            <h6>A. Exam Details</h6>
+                            <ul>
+                                <li><strong>City Name:</strong> {{ booking.exam_type.city_name }}</li>
+                                <li><strong>Location:</strong> {{ booking.exam_type.location }}</li>
+                                <li><strong>Test Mode:</strong> {{ booking.exam_type.test_mode }}</li>
+                                <li><strong>Test Type:</strong> {{ booking.exam_type.test_type }}</li>
+                                <li><strong>Test Fee:</strong> {{ booking.exam_type.newest_fee }}</li>
+                                <li><strong>Test Date:</strong> {{ booking.exam_date.test_date }}</li>
+                                <li><strong>Test Time:</strong> {{ booking.exam_date.test_time }}</li>
+                            </ul>
                         </div>
-                        <div> 
-                            <h3>C. Additional Details</h3>    
-                            <p><strong>Test Taker's First Language:</strong> {{ booking.test_takers_first_language }}</p>
-                            <p><strong>Test Taker's Country:</strong> {{ booking.test_takers_country }}</p>
-                            <p><strong>Education Level:</strong> {{ booking.education_level }}</p>
-                            <p><strong>Occupation Sector:</strong> {{ booking.occupation_sector }}</p>
-                            <p><strong>Occupation Level:</strong> {{ booking.occupation_level }}</p>
-                            <p><strong>Interest in IELTS:</strong> {{ booking.interest_in_ielts }}</p>
-                            <p><strong>Purpose:</strong> {{ booking.purpose }}</p>
-                            <p><strong>Created At:</strong> {{ booking.created_at }}</p>
-                        </div>       
+                        <div>
+                            <h6>B. Personal Information</h6>
+                            <ul>
+                                <li><strong>Name:</strong> {{ booking.name }}</li>
+                                <li><strong>Passport No:</strong> {{ booking.passport_no }}</li>
+                                <li><strong>Passport Expiry Date:</strong> {{ booking.passport_expiry_date }}</li>
+                                <li><strong>Passport Issuing Authority:</strong> {{ booking.passport_issuing_authority }}</li>
+                                <li><strong>Passport File:</strong> <a href="{{ booking.passport_file.url }}">Download</a></li>
+                                <li><strong>Country:</strong> {{ booking.country }}</li>
+                                <li><strong>Address:</strong> {{ booking.address_line }}</li>
+                                <li><strong>Town/City:</strong> {{ booking.town_or_city }}</li>
+                                <li><strong>Email:</strong> {{ booking.email }}</li>
+                                <li><strong>Date of Birth:</strong> {{ booking.dob }}</li>
+                                <li><strong>Mobile:</strong> {{ booking.mobileno }}</li>
+                                <li><strong>Gender:</strong> {{ booking.get_gender_display }}</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h6>C. Additional Details</h6>
+                            <ul>
+                                <li><strong>Test Taker's First Language:</strong> {{ booking.test_takers_first_language|default:"N/A" }}</li>
+                                <li><strong>Test Taker's Country:</strong> {{ booking.test_takers_country|default:"N/A" }}</li>
+                                <li><strong>Education Level:</strong> {{ booking.education_level|default:"N/A" }}</li>
+                                <li><strong>Occupation Sector:</strong> {{ booking.occupation_sector|default:"N/A" }}</li>
+                                <li><strong>Occupation Level:</strong> {{ booking.occupation_level|default:"N/A" }}</li>
+                                <li><strong>Interest in IELTS:</strong> {{ booking.interest_in_ielts|default:"N/A" }}</li>
+                                <li><strong>Purpose:</strong> {{ booking.purpose|default:"N/A" }}</li>
+                                <li><strong>Created At:</strong> {{ booking.created_at }}</li>
+                            </ul>
+                        </div>
                     </div>
                     {% if request.user.role == 'student' %}
-                    <p><a href="#" id="edit-link">Edit</a>For student</p>
-                    <p><a href="#" class="ml-2">Any Query</a></p>
-                    <div id="edit-form" style="display: none;">
-                        <form method="post" action="{% url 'edit_mobile_email' booking.id %}">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="id_mobile">Mobile:</label>
-                                <input type="text" class="form-control" id="id_mobile" name="mobile" value="{{ booking.mobileno }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="id_email">Email:</label>
-                                <input type="email" class="form-control" id="id_email" name="email" value="{{ booking.email }}">
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
-                        </form>
-                    </div>
+                        <p><a href="#" id="edit-link">Edit</a> (For students)</p>
+                        <div id="edit-form" style="display: none;">
+                            <form method="post" action="{% url 'edit_mobile_email' booking.id %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="id_mobile">Mobile:</label>
+                                    <input type="text" class="form-control" id="id_mobile" name="mobile" value="{{ booking.mobileno }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_email">Email:</label>
+                                    <input type="email" class="form-control" id="id_email" name="email" value="{{ booking.email }}">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+                        </div>
                     {% endif %}
-                    <div class="card-body1">
-                        <form action="{% url 'initiate' booking.id %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="purchase_order_id" value="britrans1002">
-                            <input type="hidden" name="amount" value="{{ booking.exam_type.newest_fee }}">
-                            <input type="hidden" name="return_url" value="http://127.0.0.1:8000/verify/">
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="confirmation-checkbox" required>
-                                <label class="form-check-label" for="confirmation-checkbox">I confirm that I want to proceed with the payment.</label>
-                            </div>
-                            <input type="submit" class="btn btn-primary" value="Pay with Khalti">
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>

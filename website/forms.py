@@ -1,10 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm as DjangoPasswordResetForm, SetPasswordForm as DjangoSetPasswordForm
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, get_user_model
-from .models import CustomUser, Book, ExamType
+from .models import CustomUser, Book, ExamType,ExamDate,ContactMessage
 from django.utils import timezone
-
 
 class UserLoginForm(forms.Form):
     username = forms.CharField()
@@ -61,28 +59,86 @@ class SignUpForm(UserCreationForm):
             user.save()
         return user
 
+#register student profile from admin and student portal    
+class SignUpSubForm(forms.ModelForm):
+    username = forms.CharField(label="Username", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
+    email = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    password2 = forms.CharField(label="Confirm Password", widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}))
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'password1', 'password2')
+
+    def save(self, commit=True, registered_by=None):
+        user = super(SignUpSubForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password1"])  # Set the password
+        user.role = 'student'
+        user.registered_by = registered_by
+        if commit:
+            user.save()
+        return user  
+    
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['name', 'email', 'subject', 'message']
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if commit:
+            instance.save()
+        return instance
 #password reset form    
 class PasswordResetForm(forms.Form):
     email = forms.EmailField(label="Email", max_length=254)
 
 #exam form (setting of admin)        
-class ExamForm(forms.ModelForm):
-    class Meta: 
+class ExamTypeForm(forms.ModelForm):
+    class Meta:
         model = ExamType
-        fields = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_mode', 'test_date', 'test_time']
+        fields = '__all__'  
+
+class ExamDateForm(forms.ModelForm):
+    class Meta:
+        model = ExamDate
+        fields = ['exam_type', 'test_date', 'test_time']    
+     
+# class BookTypeForm(forms.ModelForm):
+#     exam_type = forms.ModelChoiceField(queryset=ExamType.objects.all())
+#     exam_date = forms.ModelChoiceField(queryset=ExamDate.objects.all())
+
+#     class Meta:
+#         model = BookExamType
+#         fields = ['exam_type', 'exam_date']
 
 #Booking  done by admin, student & partners for students details  
 class BookForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set choices for gender field
+        self.fields['gender'].widget.choices = Book.GENDER_CHOICES
+
+        # Set default value for gender field
+        if not self.instance.pk:  # Check if the instance (Book object) has not been saved yet
+            self.initial['gender'] = 'F' 
+
     class Meta:
         model = Book
         fields = [
             'dob', 'name', 'email', 'mobileno', 'country', 'address_line',
             'town_or_city', 'passport_no', 'passport_expiry_date',
-            'passport_issuing_authority', 'passport_file', 'exam_type',
+            'passport_issuing_authority', 'passport_file',
             'gender', 'test_takers_first_language', 'test_takers_country',
-            'education_level', 'occupation_sector', 'occupation_level',
-            'interest_in_ielts', 'purpose'
+            'education_level','occupation_sector', 'occupation_level',
+            'interest_in_ielts', 'purpose', 'exam_type', 'exam_date'
         ]
+
+        widgets = {
+            'gender': forms.RadioSelect,
+        }
+        # Remove default '---------'
+        empty_label = None
 
     def __init__(self, *args, **kwargs):
         super(BookForm, self).__init__(*args, **kwargs)
@@ -93,7 +149,7 @@ class BookForm(forms.ModelForm):
         if dob and dob > timezone.now().date():
             raise forms.ValidationError('Date of birth cannot be in the future.')
         return dob
-
+    
 # Mobile & email edit for student only
 class MobileEmailForm(forms.ModelForm):
     class Meta:

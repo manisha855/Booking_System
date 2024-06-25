@@ -1,0 +1,58 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle">Admin Setting for Exam Details</h1>
+    </div>
+    <div class="mt-3">
+        <a href="{% url 'examdate_create' %}" class="btn btn-success">Create</a>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body1">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>S.N.</th>
+                                <th>Exam Type</th>
+                                <th>Test Date</th>
+                                <th>Test Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for examdate in examdates %}
+                                <tr>
+                                    <td>{{ examdate.id }}</td>
+                                    <td>{{ examdate.exam_type }}</td>
+                                    <td>{{ examdate.test_date }}</td>
+                                    <td>{{ examdate.test_time }}</td>
+                                    <td>
+                                        <div class="action-links">
+                                            <!-- View button -->
+                                            <a href="{% url 'examdate_detail' pk=examdate.pk %}" class="btn btn-info btn-sm">View Details</a>
+                                            <!-- Edit button -->
+                                            <a href="{% url 'examdate_update' pk=examdate.pk %}" class="btn btn-primary btn-sm">Edit</a>
+                                            <!-- Delete button -->
+                                            <form action="{% url 'examdate_delete' pk=examdate.pk %}" method="post" style="display: inline;">
+                                                {% csrf_token %}
+                                                <button type="submit1" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5">No exam dates available.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ConnectIPS Payment</title>
+</head>
+<body>
+    <h1>ConnectIPS Payment</h1>
+    <form action="{% url 'initiate_payment' %}" method="post">
+        {% csrf_token %}
+        <label for="txn_amt">Transaction Amount (in paisa):</label>
+        <input type="number" name="txn_amt" id="txn_amt" required>
+        
+        <label for="reference_id">Reference ID:</label>
+        <input type="text" name="reference_id" id="reference_id" required>
+        
+        <label for="remarks">Remarks:</label>
+        <input type="text" name="remarks" id="remarks" required>
+        
+        <label for="particulars">Particulars:</label>
+        <input type="text" name="particulars" id="particulars" required>
+        
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

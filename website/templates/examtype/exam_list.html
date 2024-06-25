@@ -1,0 +1,62 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0">
+	<div class="mb-3">
+		<h1 class="h3 d-inline align-middle">Admin Setting for Exam Details</h1>
+	</div>
+	<div class="mt-3">
+		<a href="{% url 'examtype_create' %}" class="btn btn-success">Create Exam Type</a>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body1">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Test Type</th>
+								<th>Test Mode</th>
+								<th>Current Fee</th>
+								<th>Newest Fee</th>
+								<th>City Name</th>
+								<th>Location</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for exam_type in examtypes %}
+								<tr>
+									<td>{{ exam_type.test_type }}</td>
+									<td>{{ exam_type.test_mode }}</td>
+									<td>{{ exam_type.current_fee }}</td>
+									<td>{{ exam_type.newest_fee }}</td>
+									<td>{{ exam_type.city_name }}</td>
+									<td>{{ exam_type.location }}</td>
+									<td>
+										<div class="action-links">
+											<!-- View button -->
+											<a href="{% url 'examtype_detail' pk=exam_type.pk %}" class="btn btn-info btn-sm">View Details</a>
+											<!-- Edit button -->
+											<a href="{% url 'examtype_update' pk=exam_type.pk %}" class="btn btn-primary btn-sm">Edit</a>
+											<!-- Delete button -->
+											<form action="{% url 'examtype_delete' pk=exam_type.pk %}" method="post" style="display: inline;">
+												{% csrf_token %}
+												<button type="submit1" class="btn btn-danger btn-sm">Delete</button>
+											</form>
+										</div>
+									</td>
+								</tr>
+							{% empty %}
+								<tr>
+									<td colspan="7">No exam types available.</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

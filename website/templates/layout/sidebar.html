@@ -5,52 +5,73 @@
         </a>
         <ul class="sidebar-nav">
             <li class="sidebar-item active">
-                <a class="sidebar-link" href="/">
+                <a class="sidebar-link" href="home_dashboard">
                     <i class="align-middle" data-feather="sliders"></i>
                     <span class="align-middle">Dashboard</span>
                 </a>
             </li>
 
-            {% if request.user.is_authenticated %}
+            {% if request.user.role == 'student' %}
+            {% if request.user.registered_by is None %}
             <li class="sidebar-item dropdown">
                 <a class="sidebar-link dropdown-toggle" href="#" id="formsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="align-middle" data-feather="book"></i>
-                    <span class="align-middle">Book Exam</span>
-                </a>
+                     <i class="align-middle" data-feather="book"></i>
+                        <span class="align-middle">Book Exam</span>
+                    </a>
                 <div class="dropdown-menu" aria-labelledby="formsDropdown">
                     <a class="dropdown-item" href="{% url 'booking_form' %}">Create</a>
-                    {% comment %} {% if request.user.is_superuser or request.user.role == 'partner' %}
-                    <a class="dropdown-item" href="{% url 'booking_list' %}">List</a>
-                    {% endif %} {% endcomment %}
-                </div>
-            </li>
-            
-            <li class="sidebar-item dropdown">
-                <a class="sidebar-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="align-middle" data-feather="user"></i> 
-                    <span class="align-middle">My Details</span>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="profileDropdown">
-                    {% comment %} {% if request.user.is_superuser %}
-                    <a class="dropdown-item" href="#"> User List</a>
-                    {% endif %} {% endcomment %}
-                    <a class="dropdown-item" href="{% url 'booking_list'%}">Details</a>
-                </div>
-            </li>
-            
-            {% if request.user.is_superuser %}
-            <li class="sidebar-item dropdown">
-                <a class="sidebar-link dropdown-toggle" href="#" id="adminSettingsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="align-middle" data-feather="settings"></i>
-                    <span class="align-middle">Admin Settings</span>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="adminSettingsDropdown">
-                    <a class="dropdown-item" href="{% url 'create_exam_type' %}">Create</a>
-                    <a class="dropdown-item" href="{% url 'exam_type_list' %}">List</a>
                 </div>
             </li>
             {% endif %}
-            
+            {% endif %}
+
+            {% comment %} {% if request.user.is_superuser or request.user.role == 'partner' %}
+                <li class="sidebar-item dropdown">
+                    <a class="sidebar-link dropdown-toggle" href="#" id="formsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="align-middle" data-feather="book"></i>
+                        <span class="align-middle">Student Profile</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="formsDropdown">
+                        <a class='dropdown-item' href="{% url 'sub_register_student' %}">Create</a>
+                    </div>
+                </li>
+            {% endif %} {% endcomment %}
+
+            <li class="sidebar-item dropdown">
+                <a class="sidebar-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="align-middle" data-feather="user"></i> 
+                    <span class="align-middle">Student Details</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                    {% if request.user.is_superuser or request.user.role == 'partner' %}
+                        <a class='dropdown-item' href="{% url 'sub_register_student_list' %}">List of students</a>
+                    {% endif %}
+                    <a class="dropdown-item" href="{% url 'booking_list'%}">Form Details</a>
+                </div>
+            </li>
+
+            {% if request.user.is_superuser %}
+                <li class="sidebar-item dropdown">
+                    <a class="sidebar-link dropdown-toggle" href="#" id="adminSettingsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="align-middle" data-feather="settings"></i>
+                        <span class="align-middle">Admin Settings</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminSettingsDropdown">
+                        <a class="dropdown-item" href="{% url 'examtype_create' %}">Create Exam Type</a>
+                        <a class="dropdown-item" href="{% url 'examdate_create' %}">Create Exam Date</a>
+                    </div>
+                </li>
+                <li class="sidebar-item dropdown">
+                    <a class="sidebar-link dropdown-toggle" href="#" id="adminSettingsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="align-middle" data-feather="refresh-cw"></i>
+                        <span class="align-middle">Requested For Update</span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminSettingsDropdown">
+                        <a class="dropdown-item" href="#">List</a>
+                    </div>
+                </li>
+            {% endif %}
+
             <li class="sidebar-item dropdown">
                 <a class="sidebar-link dropdown-toggle" href="#" id="feeTransactionDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="align-middle" data-feather="dollar-sign"></i>
@@ -59,37 +80,27 @@
                 <div class="dropdown-menu" aria-labelledby="feeTransactionDropdown">
                     <a class="dropdown-item" href="{% url 'payment' %}">Proceed</a>
                     {% if request.user.is_superuser or request.user.role == 'partner' %}
-                    <a class="dropdown-item" href="#">List</a>
+                        <a class="dropdown-item" href="#">List</a>
                     {% endif %}
                 </div>
             </li>
-                <li class="sidebar-item dropdown">
-                    <a class="sidebar-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="align-middle" data-feather="clock"></i> 
-                        <span class="align-middle">History</span>
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
-                        <a class="dropdown-item" href="{% url 'history'%}">Payment History</a>
-                    </div>
-                </li>
-            
+
             <li class="sidebar-item dropdown">
-                <a class="sidebar-link dropdown-toggle" href="#" id="contactUsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="align-middle" data-feather="phone"></i>
-                    <span class="align-middle">Contact Us</span>
+                <a class="sidebar-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="align-middle" data-feather="clock"></i> 
+                    <span class="align-middle">History</span>                    
                 </a>
-                <div class="dropdown-menu" aria-labelledby="contactUsDropdown">
-                    <a class="dropdown-item" href="#">Help</a>
+                <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <a class="dropdown-item" href="#">Payment History</a>
                 </div>
             </li>
-            
+
             <li class="sidebar-item">
                 <a class="sidebar-link" href="{% url 'logout' %}">
                     <i class="align-middle me-2" data-feather="log-out"></i>
                     <span class="align-middle">Log out</span>
                 </a>
             </li>
-            {% endif %}
         </ul>
     </div>
 </nav>

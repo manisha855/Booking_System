@@ -1,0 +1,44 @@
+{% extends 'webapp/base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #911a09;
+    }
+    /* Background color for form content */
+    .form-content {
+        background-color: #201c6a;
+        padding: 20px;
+        border-radius: 10px;
+        color: #ffffff;
+    }
+    .form-group {
+        position: relative;
+    }
+    .form-control {
+        padding-right: 40px;
+    }
+    .password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+</style>
+
+<div class="container text-center text-black">
+    <h2 class="display-3" style="color: white;">ELT Booking System</h2>
+    <p class="display-4 d-none d-sm-block">Book your examinations online!</p>
+    <p class="lead">Sign Up now to start your first ELT booking examination</p>
+
+    <p class="lead" style="font-size: 1.5rem;">Welcome to the ELT Booking System. We provide a convenient way to book your examinations online.</p>
+    <br><br>
+
+    <p><strong> Start Your Journey Here:</strong></p>
+    <a href="{% url 'register' %}" class="btn btn-lg btn-register" style="background-color: white; color: #201c6a; border-color: #201c6a; padding-right: 35px; border-radius: 0%;"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Register Now</a>
+
+    <br><br><br>
+</div>
+
+{% endblock %}

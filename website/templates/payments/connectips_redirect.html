@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting to ConnectIPS</title>
+</head>
+<body>
+    <p>Redirecting to ConnectIPS...</p>
+    <form id="connectipsForm" action="{{ connectips_url }}" method="post">
+        <input type="hidden" name="MERCHANTID" value="{{ merchant_id }}">
+        <input type="hidden" name="APPID" value="{{ app_id }}">
+        <input type="hidden" name="APPNAME" value="{{ app_name }}">
+        <input type="hidden" name="TXNID" value="{{ txn_id }}">
+        <input type="hidden" name="TXNDATE" value="{{ txn_date }}">
+        <input type="hidden" name="TXNCRNCY" value="NPR">
+        <input type="hidden" name="TXNAMT" value="{{ txn_amt }}">
+        <input type="hidden" name="REFERENCEID" value="{{ reference_id }}">
+        <input type="hidden" name="REMARKS" value="{{ remarks }}">
+        <input type="hidden" name="PARTICULARS" value="{{ particulars }}">
+        <input type="hidden" name="TOKEN" value="{{ token }}">
+    </form>
+    <script type="text/javascript">
+        document.getElementById('connectipsForm').submit();
+    </script>
+</body>
+</html>

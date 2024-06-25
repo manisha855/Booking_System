@@ -17,8 +17,32 @@
                 <div class="card-body1">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-
-                        <!-- First section of the form -->
+                        <fieldset>
+                            <legend><strong>A. Exam Information</strong></legend>
+                            <div class="mb-3">
+                                <label for="{{ form.exam_type.id_for_label }}">Test Details:</label> 
+                                {{ form.exam_type }}
+                                {% if form.exam_type.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.exam_type.errors %}
+                                            <small>{{ error }}</small><br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.exam_date.id_for_label }}">Test Date:</label> 
+                                {{ form.exam_date }}
+                                {% if form.exam_date.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.exam_date.errors %}
+                                            <small>{{ error }}</small><br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        <!-- Personal Information Section -->
                         <fieldset>
                             <legend><strong>A. Personal Information</strong></legend>
                             <div class="mb-3">
@@ -110,17 +134,6 @@
                                 {% endif %}
                             </div>
                             <div class="mb-3">
-                                {{ form.passport_file.label_tag }}
-                                {{ form.passport_file }}
-                                {% if form.passport_file.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.passport_file.errors %}
-                                            <small>{{ error }}</small><br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="mb-3">
                                 {{ form.passport_expiry_date.label_tag }}
                                 {{ form.passport_expiry_date }}
                                 {% if form.passport_expiry_date.errors %}
@@ -143,6 +156,17 @@
                                 {% endif %}
                             </div>
                             <div class="mb-3">
+                                {{ form.passport_file.label_tag }}
+                                {{ form.passport_file }}
+                                {% if form.passport_file.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.passport_file.errors %}
+                                            <small>{{ error }}</small><br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
                                 {{ form.gender.label_tag }}
                                 {{ form.gender }}
                                 {% if form.gender.errors %}
@@ -155,26 +179,9 @@
                             </div>
                         </fieldset>
 
-                        <!-- Second section of the form -->
+                        <!-- Additional Information Section -->
                         <fieldset>
-                            <legend><strong>B. Exam Information</strong></legend>
-                            <div class="mb-3">
-                                <label for="{{ form.exam_type.id_for_label }}">Exam Details:</label> 
-                                {{ form.exam_type }}
-                                {% if form.exam_type.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.exam_type.errors %}
-                                            <small>{{ error }}</small><br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </fieldset>
-                        
-
-                        <!-- Third section of the form -->
-                        <fieldset>
-                            <legend><strong>C. Additional Information</strong></legend>
+                            <legend><strong> B. Additional Information(optional)</strong></legend>
                             <div class="mb-3">
                                 {{ form.test_takers_first_language.label_tag }}
                                 {{ form.test_takers_first_language }}
@@ -254,7 +261,7 @@
                             </div>
                         </fieldset>
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit1" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>

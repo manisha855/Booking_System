@@ -24,15 +24,15 @@ class CustomUserAdmin(UserAdmin):
 # Register CustomUser with the custom admin class
 admin.site.register(CustomUser, CustomUserAdmin)
         
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'profile_image', 'phone_number', 'address', 'phone')
-
 class ExamTypeAdmin(admin.ModelAdmin):
-    list_display = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_mode', 'test_date', 'test_time']
+    list_display = ['city_name', 'location', 'current_fee', 'newest_fee', 'test_type', 'test_mode']
 
 admin.site.register(ExamType, ExamTypeAdmin)
 
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('id', 'created_at', 'name', 'created_by')
+    list_filter = ('created_at', 'created_by')
+    search_fields = ('name', 'created_by__username')
+    ordering = ('-created_at',)
 
-# Register all models except TestSchedule
-admin.site.register(Book)
-# admin.site.register(Profile,ProfileAdmin)
+admin.site.register(Book, BookAdmin)
